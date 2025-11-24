@@ -1,5 +1,5 @@
 {
-    "name": "obsidian-work-logger",
+    "name": "work-logger",
     "version": "1.0.0",
     "description": "Track daily tasks and generate weekly reports via a calendar view, with AI-powered summaries.",
     "main": "main.js",
