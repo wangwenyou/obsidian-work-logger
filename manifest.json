@@ -1,0 +1,10 @@
+{
+	"id": "obsidian-work-logger",
+	"name": "Work Logger",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Track daily tasks and generate weekly reports via calendar view.",
+	"author": "wangwenyou",
+	"authorUrl": "https://github.com/wangwenyou/obsidian-work-logger",
+	"isDesktopOnly": false
+}
