@@ -129,7 +129,10 @@ class CalendarView extends ItemView {
                 }
 
 				cell.createDiv({ cls: 'day-number' }).createSpan({ text: dayStr });
-                const checkIcon = cell.createDiv({ cls: 'task-check' });
+
+                // 为标记创建一个容器，以便更好地对齐和支持多个标记
+                const markersContainer = cell.createDiv({ cls: 'markers' });
+                const checkIcon = markersContainer.createDiv({ cls: 'marker task-check' });
                 setIcon(checkIcon, 'check'); 
                 
 				cell.onclick = () => this.openDailyNote(targetDate);
