@@ -70,7 +70,7 @@ In the report modal, click the **copy icon** to paste the time statistics table 
 
 #### Manual Installation
 1.  Download `main.js`, `manifest.json`, and `styles.css` from the [latest Release](https://github.com/wangwenyou/obsidian-work-logger/releases).
-2.  Create a folder named `obsidian-work-logger` in your vault's `.obsidian/plugins/` directory.
+2.  Create a folder named `work-logger` in your vault's `.obsidian/plugins/` directory.
 3.  Paste the files into that folder.
 4.  Reload Obsidian and enable the plugin in Settings.
 
@@ -142,7 +142,7 @@ Obsidian Work Logger 是一个极简的工时记录与周报生成插件。它�
 
 #### 手动安装
 1.  从 [Releases 页面](https://github.com/wangwenyou/obsidian-work-logger/releases) 下载最新的 `main.js`, `manifest.json`, `styles.css` 文件。
-2.  在你的 Obsidian 仓库中的 `.obsidian/plugins/` 目录下，创建一个名为 `obsidian-work-logger` 的文件夹。
+2.  在你的 Obsidian 仓库中的 `.obsidian/plugins/` 目录下，创建一个名为 `work-logger` 的文件夹。
 3.  将下载的三个文件粘贴进去。
 4.  重启 Obsidian，在设置中启用插件。
 
