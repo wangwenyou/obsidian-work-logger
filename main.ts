@@ -101,10 +101,9 @@ class CalendarView extends ItemView {
 		
 		grid.createDiv({ cls: 'day-header' }); 
         
-        for (let i = 1; i <= 7; i++) {
-            const dayName = moment().isoWeekday(i).format('ddd');
+        t('weekdaysShort').split(',').forEach(dayName => {
             grid.createDiv({ cls: 'day-header', text: dayName });
-        }
+        });
 
 		const startOfMonth = this.currentDate.clone().startOf('month');
 		let dayIterator = startOfMonth.clone().subtract(startOfMonth.isoWeekday() - 1, 'days');

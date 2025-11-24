@@ -63,4 +63,5 @@ Here is the raw log data for this week:
     'modelNameDesc': 'The specific model to use, e.g., gpt-4, gemini-2.5-flash.',
     'prompt': 'System Prompt',
     'promptDesc': 'The instruction sent to the AI to guide how it generates the weekly report.',
+    'weekdaysShort': 'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
 };
