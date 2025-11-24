@@ -1,13 +1,9 @@
 /*
- * Work Logger - Refined & Minimal Style Overhaul
- *
- * This stylesheet implements a soft, modern, and clean aesthetic
- * with a focus on whitespace, typography, and subtle indicators.
+ * Work Logger - Refined & Minimal Style Overhaul (Corrected)
  */
 
 :root {
-    /* Muted accent colors for a calmer UI */
-    --wl-accent-color: var(--interactive-accent, #8cb4f5); /* A softer blue */
+    --wl-accent-color: var(--interactive-accent, #8cb4f5);
     --wl-text-on-accent: #fff;
     --wl-background-primary: var(--background-primary, #ffffff);
     --wl-background-secondary: var(--background-secondary, #f7f7f7);
@@ -15,14 +11,11 @@
     --wl-text-normal: var(--text-normal, #2e2e2e);
     --wl-text-muted: var(--text-muted, #999999);
     --wl-text-faint: var(--text-faint, #cccccc);
-
-    /* Consistent spacing and radiuses */
     --wl-radius: 6px;
     --wl-spacing: 12px;
     --wl-transition: 180ms ease-out;
 }
 
-/* Use a slightly different color scheme in dark mode */
 .theme-dark {
     --wl-accent-color: var(--interactive-accent, #4a75b6);
     --wl-background-primary: var(--background-primary, #202020);
@@ -36,9 +29,6 @@
 .work-logger-container {
     padding: var(--wl-spacing);
     font-family: var(--font-interface);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
     background-color: var(--wl-background-primary);
 }
 
@@ -49,14 +39,12 @@
     align-items: center;
     padding-bottom: var(--wl-spacing);
 }
-
 .calendar-header h3 {
     margin: 0;
     font-size: 1.1em;
     font-weight: 500;
     color: var(--wl-text-normal);
 }
-
 .calendar-header button {
     background: transparent;
     border: none;
@@ -71,11 +59,10 @@
     color: var(--wl-text-normal);
 }
 
-/* Calendar Grid */
+/* Calendar Grid - REMOVED flex-grow: 1 */
 .calendar-grid {
     display: grid;
-    grid-template-columns: 40px repeat(7, 1fr); /* Slightly wider week stat column */
-    flex-grow: 1;
+    grid-template-columns: 40px repeat(7, 1fr);
     border-top: 1px solid var(--wl-border-color);
     border-left: 1px solid var(--wl-border-color);
 }
@@ -99,14 +86,13 @@
     color: var(--wl-text-faint);
     border-right: 1px solid var(--wl-border-color);
     border-bottom: 1px solid var(--wl-border-color);
-    opacity: 0; /* Hidden by default */
+    opacity: 0;
     transition: var(--wl-transition);
 }
-
 .calendar-grid:hover .week-stat-btn {
-    opacity: 0.4; /* Appear on grid hover */
+    opacity: 0.7; /* Appear on grid hover */
+    color: var(--wl-accent-color); /* Make it more visible */
 }
-
 .week-stat-btn:hover {
     background-color: var(--background-modifier-hover);
     opacity: 1;
@@ -123,30 +109,20 @@
     border-right: 1px solid var(--wl-border-color);
     border-bottom: 1px solid var(--wl-border-color);
     padding: 8px;
-
-    /* Use flex to position content top and bottom */
     display: flex;
     flex-direction: column;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: center;
     gap: 8px;
+    min-height: 90px; /* Give cells a consistent minimum height */
 }
-
-.day-cell:hover {
-    background-color: var(--background-modifier-hover);
-}
-
-.day-cell.other-month {
-    pointer-events: none; /* Non-clickable */
-}
-
-.day-cell.other-month .day-number span {
-    color: var(--wl-text-faint);
-}
+.day-cell:hover { background-color: var(--background-modifier-hover); }
+.day-cell.other-month { pointer-events: none; }
+.day-cell.other-month .day-number span { color: var(--wl-text-faint); }
 
 /* Day Number & "Today" Marker */
 .day-number {
-    font-weight: 400; /* Lighter font weight */
+    font-weight: 400;
     font-size: 0.9em;
     color: var(--wl-text-normal);
     width: 26px;
@@ -158,57 +134,117 @@
     transition: var(--wl-transition);
     z-index: 1;
 }
-
 .day-cell.today .day-number {
     background-color: var(--wl-accent-color);
     color: var(--wl-text-on-accent);
     font-weight: 600;
 }
 
-/* Markers Container & Individual Markers */
+/* Markers */
 .markers {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 4px; /* Space between multiple markers */
-    min-height: 16px; /* Reserve space to prevent layout shifts */
+    gap: 4px;
+    min-height: 16px;
 }
-
 .marker {
     opacity: 0;
     transform: scale(0.5);
     transition: all var(--wl-transition);
 }
-
 .day-cell.has-data .marker {
     opacity: 1;
     transform: scale(1);
 }
-
-/* Default checkmark style, now perfectly centered */
-.marker.task-check {
-    color: var(--wl-accent-color);
-}
+.marker.task-check { color: var(--wl-accent-color); }
 .marker.task-check svg {
     width: 16px;
     height: 16px;
-    display: block; /* Fix for small alignment issues */
+    display: block;
 }
 
-/* Foundation for future multi-marker support */
-.marker.dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
+/* --- MODAL STYLES (RESTORED) --- */
+.stat-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 15px;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: var(--wl-radius);
+    overflow: hidden;
 }
-.marker.dot.diary { background-color: #6a9a6a; } /* Pale green */
-.marker.dot.review { background-color: #d1a865; } /* Pale yellow */
-
-/* ---- Modal styles can remain the same, they are already quite clean ---- */
-.stat-table,.modal-header-flex,.modal-actions,.ai-summary-container,.ai-loading,
-.ai-summary-container h1, .ai-summary-container h2, .ai-summary-container h3,
-.ai-summary-container ul, .ai-summary-container ol, .ai-summary-container li,
-.ai-summary-container p, @keyframes pulse {
-    /* Using previous good styles */
-    /* ... If needed, specific overrides can be added here ... */
+.stat-table th, .stat-table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+.stat-table th {
+    background-color: var(--background-secondary);
+    font-weight: 600;
+    text-align: left;
+}
+.stat-table tr:last-child td {
+    border-bottom: none;
+}
+.stat-total-row {
+    background-color: var(--background-secondary-alt);
+    font-weight: bold;
+}
+.modal-header-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+.modal-actions {
+    display: flex;
+    gap: 10px;
+}
+.ai-summary-container {
+    background-color: var(--background-secondary);
+    padding: 20px;
+    border-radius: var(--wl-radius);
+    min-height: 120px;
+    line-height: 1.6;
+    user-select: text;
+    border: 1px solid var(--background-modifier-border);
+    margin-top: 15px;
+    font-size: 0.95em;
+}
+.ai-loading {
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    gap: 10px;
+    animation: pulse 2s infinite ease-in-out;
+}
+.ai-summary-container h1, .ai-summary-container h2, .ai-summary-container h3 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-size: 1.1em;
+    color: var(--text-normal);
+    border-bottom: none;
+}
+.ai-summary-container h1:first-child,
+.ai-summary-container h2:first-child,
+.ai-summary-container h3:first-child {
+    margin-top: 0;
+}
+.ai-summary-container ul, .ai-summary-container ol {
+    padding-left: 24px;
+    margin: 0.5em 0;
+}
+.ai-summary-container li {
+    margin-bottom: 4px;
+}
+.ai-summary-container p {
+    margin-bottom: 1em;
+}
+@keyframes pulse {
+    0% { opacity: 0.6; transform: scale(0.98); }
+    50% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0.6; transform: scale(0.98); }
 }
