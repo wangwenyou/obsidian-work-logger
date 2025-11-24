@@ -5,6 +5,6 @@
 	"minAppVersion": "0.15.0",
 	"description": "Track daily tasks and generate weekly reports via calendar view.",
 	"author": "wangwenyou",
-	"authorUrl": "https://github.com/wangwenyou/obsidian-work-logger",
+	"authorUrl": "https://github.com/wangwenyou",
 	"isDesktopOnly": false
 }
