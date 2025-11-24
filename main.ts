@@ -61,25 +61,28 @@ export default class WorkLoggerPlugin extends Plugin {
 class CalendarView extends ItemView {
 	plugin: WorkLoggerPlugin;
 	currentDate: moment.Moment;
+    existingDates: Set<string>; // 用于缓存存在日志的日期 (格式: YYYY-MM-DD)
 
 	constructor(leaf: WorkspaceLeaf, plugin: WorkLoggerPlugin) {
 		super(leaf);
 		this.plugin = plugin;
 		this.currentDate = moment();
+        this.existingDates = new Set();
 	}
 
 	getViewType() { return VIEW_TYPE_CALENDAR; }
 	getDisplayText() { return t('viewTitle'); }
-	async onOpen() { this.renderCalendar(); }
+	async onOpen() { 
+        await this.renderCalendar();
+    }
 	async onClose() { }
 
-	renderCalendar() {
+	async renderCalendar() {
 		const container = this.containerEl.children[1];
 		container.empty();
 		container.addClass('work-logger-container');
 
 		const header = container.createDiv({ cls: 'calendar-header' });
-        // 使用图标代替文字，避免翻译长度问题
 		const prevBtn = header.createEl('button', { attr: { 'aria-label': t('prevMonth') } });
         setIcon(prevBtn, 'arrow-left');
         
@@ -88,18 +91,17 @@ class CalendarView extends ItemView {
 		const nextBtn = header.createEl('button', { attr: { 'aria-label': t('nextMonth') } });
         setIcon(nextBtn, 'arrow-right');
 
-		prevBtn.onclick = () => { this.currentDate.subtract(1, 'month'); this.renderCalendar(); };
-		nextBtn.onclick = () => { this.currentDate.add(1, 'month'); this.renderCalendar(); };
+		prevBtn.onclick = async () => { this.currentDate.subtract(1, 'month'); await this.renderCalendar(); };
+		nextBtn.onclick = async () => { this.currentDate.add(1, 'month'); await this.renderCalendar(); };
+
+        // 核心优化：一次性获取数据
+        await this.fetchAndCacheExistingFiles();
 
 		const grid = container.createDiv({ cls: 'calendar-grid' });
 		
-        // 1. 生成表头 (动态获取当前语言的星期名称)
-		grid.createDiv({ cls: 'day-header' }); // 左上角占位
+		grid.createDiv({ cls: 'day-header' }); 
         
-        // 获取当前 ISO 周一到周日的名称
         for (let i = 1; i <= 7; i++) {
-            // isoWeekday(i) 强制获取周一(1)到周日(7)的对象
-            // format('ddd') 会根据 locale 返回 "Mon"/"周一"/"週一"
             const dayName = moment().isoWeekday(i).format('ddd');
             grid.createDiv({ cls: 'day-header', text: dayName });
         }
@@ -122,24 +124,41 @@ class CalendarView extends ItemView {
 				const cell = grid.createDiv({ cls: `day-cell ${isToday ? 'today' : ''}` });
                 if (!isCurrentMonth) cell.addClass('other-month');
 
-				cell.createDiv({ text: dayStr, cls: 'day-number' });
+                // 使用缓存数据进行同步检查，而不是异步IO
+                if (this.existingDates.has(targetDate.format('YYYY-MM-DD'))) {
+                    cell.addClass('has-data');
+                }
+
+				cell.createDiv({ cls: 'day-number' }).createSpan({ text: dayStr });
                 const checkIcon = cell.createDiv({ cls: 'task-check' });
                 setIcon(checkIcon, 'check'); 
                 
-                this.updateCellStatus(cell, targetDate);
 				cell.onclick = () => this.openDailyNote(targetDate);
 				dayIterator.add(1, 'day');
 			}
 		}
 	}
 
-    async updateCellStatus(cell: HTMLElement, date: moment.Moment) {
-        if (await this.checkFileExists(date)) cell.addClass('has-data');
-    }
-
-    async checkFileExists(date: moment.Moment): Promise<boolean> {
-        const path = this.getFilePath(date);
-        return await this.app.vault.adapter.exists(path);
+    async fetchAndCacheExistingFiles() {
+        this.existingDates.clear();
+        const root = this.plugin.settings.rootFolder;
+        
+        // 扫描上个月、当前月、下个月的文件夹
+        for (let i = -1; i <= 1; i++) {
+            const monthToScan = this.currentDate.clone().add(i, 'month');
+            const folderPath = `${root}/${monthToScan.format('YYYYMM')}`;
+            
+            if (await this.app.vault.adapter.exists(folderPath)) {
+                const { files } = await this.app.vault.adapter.list(folderPath);
+                files.forEach(filePath => {
+                    const day = filePath.split('/').pop()?.split('.')[0]; // DD.md -> DD
+                    if (day) {
+                        const dateStr = `${monthToScan.format('YYYY-MM')}-${day.padStart(2, '0')}`;
+                        this.existingDates.add(dateStr);
+                    }
+                });
+            }
+        }
     }
 
     getFilePath(date: moment.Moment): string {

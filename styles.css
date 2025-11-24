@@ -1,103 +1,170 @@
-/* 容器 */
-.work-logger-container {
-    padding: 20px 40px;
-    max-width: 1200px;
-    margin: 0 auto;
-    font-family: var(--font-interface);
+/*
+ * Work Logger - Fantastical Style Overhaul
+ *
+ * This stylesheet aims to replicate the clean, elegant, and
+ * information-dense aesthetic of apps like Fantastical.
+ */
+
+:root {
+    --wl-accent-color: var(--interactive-accent, #4a88f7);
+    --wl-accent-color-faint: var(--interactive-accent-rgb, 74, 136, 247);
+    --wl-text-on-accent: #fff;
+    --wl-radius-l: 12px;
+    --wl-radius-m: 8px;
+    --wl-radius-s: 50%; /* for circles */
+    --wl-font-family: var(--font-interface, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
+    --wl-transition: 150ms ease-in-out;
 }
 
+.work-logger-container {
+    padding: 10px 20px;
+    max-width: 100%;
+    margin: 0 auto;
+    font-family: var(--wl-font-family);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
 .calendar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
-}
-.calendar-header h3 { margin: 0; font-size: 1.5em; font-weight: 700; }
-.calendar-header button {
-    background: transparent; border: 1px solid var(--background-modifier-border);
-    color: var(--text-muted); border-radius: 8px; padding: 4px 12px; cursor: pointer;
-}
-.calendar-header button:hover { background: var(--background-modifier-hover); color: var(--text-normal); }
-
-/* 网格 */
-.calendar-grid {
-    display: grid;
-    grid-template-columns: 32px repeat(7, 1fr);
-    gap: 1px; 
-    background-color: var(--background-modifier-border);
-    border: 1px solid var(--background-modifier-border);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    padding: 10px 4px;
 }
 
-.day-header {
-    background-color: var(--background-primary);
-    color: var(--text-muted);
-    text-align: center; font-weight: 600; font-size: 0.85em; padding: 12px 0;
-}
-
-/* 周报按钮 */
-.week-stat-btn {
-    background-color: var(--background-secondary);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: all 0.2s ease; color: var(--text-faint);
-}
-.week-stat-btn:hover { background-color: var(--interactive-accent); color: var(--text-on-accent); }
-.week-stat-btn svg { width: 16px; height: 16px; }
-
-/* 日期单元格：Flex 居中布局 */
-.day-cell {
-    background-color: var(--background-primary);
-    min-height: 100px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    
-    /* 核心对齐修改 */
-    display: flex;
-    flex-direction: column;
-    align-items: center;     /* 水平居中 */
-    justify-content: center; /* 垂直居中 (或者改为 flex-start 并加 padding-top) */
-    gap: 8px;                /* 数字和对勾之间的间距 */
-}
-
-.day-cell:hover { background-color: var(--background-secondary-alt); }
-.day-cell.other-month { background-color: var(--background-secondary); opacity: 0.6; }
-
-/* 日期数字 */
-.day-number {
+.calendar-header h3 {
+    margin: 0;
+    font-size: 1.2em;
     font-weight: 600;
-    font-size: 1.1em;
     color: var(--text-normal);
-    
-    /* 今天的圆圈样式 */
-    width: 32px;
-    height: 32px;
+    transition: var(--wl-transition);
+}
+.calendar-header h3:hover {
+    color: var(--wl-accent-color);
+}
+
+
+.calendar-header button {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    border-radius: var(--wl-radius-m);
+    padding: 6px;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
+    transition: var(--wl-transition);
 }
 
-/* 今天 */
+.calendar-header button:hover {
+    background: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+/* Calendar Grid */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: 32px repeat(7, 1fr);
+    flex-grow: 1; /* Make grid fill available space */
+    border-top: 1px solid var(--background-modifier-border);
+}
+
+.day-header {
+    background-color: transparent;
+    color: var(--text-muted);
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.8em;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+/* Week Stat Button */
+.week-stat-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-faint);
+    border-right: 1px solid var(--background-modifier-border);
+    border-bottom: 1px solid var(--background-modifier-border);
+    opacity: 0.5;
+    transition: var(--wl-transition);
+}
+
+.week-stat-btn:hover {
+    background-color: var(--background-modifier-hover);
+    opacity: 1;
+    color: var(--wl-accent-color);
+}
+.week-stat-btn svg { width: 16px; height: 16px; }
+
+
+/* Day Cell */
+.day-cell {
+    position: relative;
+    cursor: pointer;
+    transition: background-color var(--wl-transition);
+    border-right: 1px solid var(--background-modifier-border);
+    border-bottom: 1px solid var(--background-modifier-border);
+    padding: 8px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+/* Remove right border for last column */
+.day-cell:nth-child(8n) {
+    border-right: none;
+}
+
+.day-cell:hover {
+    background-color: var(--background-modifier-hover);
+}
+
+.day-cell.other-month .day-number span {
+    color: var(--text-faint);
+}
+
+
+/* Day Number & "Today" Marker */
+.day-number {
+    font-weight: 500;
+    font-size: 0.9em;
+    color: var(--text-normal);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--wl-radius-s);
+    transition: var(--wl-transition);
+    z-index: 1;
+}
+
 .day-cell.today .day-number {
-    background-color: var(--interactive-accent);
-    color: var(--text-on-accent);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background-color: var(--wl-accent-color);
+    color: var(--wl-text-on-accent);
+    font-weight: 700;
 }
 
-/* 任务对勾 */
+/* Task Checkmark */
 .task-check {
-    color: var(--interactive-accent);
+    color: var(--wl-accent-color);
     opacity: 0;
-    transform: scale(0.8);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    height: 20px; /* 固定高度占位，防止布局跳动 */
+    transform: scale(0.5);
+    transition: all var(--wl-transition);
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
 }
 
 .task-check svg {
-    width: 20px;
-    height: 20px;
+    width: 14px;
+    height: 14px;
 }
 
 .day-cell.has-data .task-check {
@@ -105,11 +172,16 @@
     transform: scale(1);
 }
 
-/* 模态框表格 */
+.day-cell.has-data.today .task-check {
+    color: var(--text-on-accent);
+    opacity: 0.7;
+}
+
+/* Modal styles remain mostly the same, as they are already good */
 .stat-table {
     width: 100%;
     border-collapse: separate; border-spacing: 0; margin-top: 15px;
-    border: 1px solid var(--background-modifier-border); border-radius: 8px; overflow: hidden;
+    border: 1px solid var(--background-modifier-border); border-radius: var(--wl-radius-m); overflow: hidden;
 }
 .stat-table th {
     background-color: var(--background-secondary);
@@ -120,84 +192,27 @@
 .stat-table tr:last-child td { border-bottom: none; }
 .stat-total-row { background-color: var(--background-secondary-alt); font-weight: bold; }
 .modal-header-flex { display: flex; align-items: center; margin-bottom: 15px; }
-/* Modal 头部操作区 */
 .modal-actions {
-    display: flex;
-    gap: 10px; /* 按钮间距 */
-    margin-left: auto; /* 将按钮推到右边 */
+    display: flex; gap: 10px; margin-left: auto;
 }
-
-.modal-actions button {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    font-weight: 500;
-}
-
-.modal-actions button svg {
-    width: 16px;
-    height: 16px;
-}
-
-/* AI 总结结果容器 */
 .ai-summary-container {
     background-color: var(--background-secondary);
-    padding: 20px;
-    border-radius: 8px;
-    min-height: 120px;
-    line-height: 1.6;
-    user-select: text; /* 允许复制文本 */
-    border: 1px solid var(--background-modifier-border);
-    margin-top: 15px;
-    font-size: 0.95em;
+    padding: 20px; border-radius: var(--wl-radius-m);
+    min-height: 120px; line-height: 1.6; user-select: text;
+    border: 1px solid var(--background-modifier-border); margin-top: 15px; font-size: 0.95em;
 }
-
-/* AI 正在生成时的加载动画 */
 .ai-loading {
-    color: var(--text-muted);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100px;
-    gap: 10px;
-    animation: pulse 2s infinite ease-in-out;
+    color: var(--text-muted); display: flex; flex-direction: column; align-items: center;
+    justify-content: center; height: 100px; gap: 10px; animation: pulse 2s infinite ease-in-out;
 }
-
-/* Markdown 渲染样式微调 */
-.ai-summary-container h1, 
-.ai-summary-container h2, 
-.ai-summary-container h3 {
-    margin-top: 1em;
-    margin-bottom: 0.5em;
-    font-size: 1.1em;
-    color: var(--text-normal);
-    border-bottom: none; /* 去掉 Obsidian 默认的下划线，保持简洁 */
+.ai-summary-container h1, .ai-summary-container h2, .ai-summary-container h3 {
+    margin-top: 1em; margin-bottom: 0.5em; font-size: 1.1em; color: var(--text-normal); border-bottom: none;
 }
+.ai-summary-container h1:first-child, .ai-summary-container h2:first-child, .ai-summary-container h3:first-child { margin-top: 0; }
+.ai-summary-container ul, .ai-summary-container ol { padding-left: 24px; margin: 0.5em 0; }
+.ai-summary-container li { margin-bottom: 4px; }
+.ai-summary-container p { margin-bottom: 1em; }
 
-.ai-summary-container h1:first-child,
-.ai-summary-container h2:first-child,
-.ai-summary-container h3:first-child {
-    margin-top: 0;
-}
-
-.ai-summary-container ul, 
-.ai-summary-container ol {
-    padding-left: 24px;
-    margin: 0.5em 0;
-}
-
-.ai-summary-container li {
-    margin-bottom: 4px;
-}
-
-.ai-summary-container p {
-    margin-bottom: 1em;
-}
-
-/* 呼吸灯动画 */
 @keyframes pulse {
     0% { opacity: 0.6; transform: scale(0.98); }
     50% { opacity: 1; transform: scale(1); }
