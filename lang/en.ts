@@ -64,4 +64,5 @@ Here is the raw log data for this week:
     'prompt': 'System prompt',
     'promptDesc': 'The instruction sent to the AI to guide how it generates the weekly report.',
     'weekdaysShort': 'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
+    'monthTasksTitle': 'Incomplete Tasks This Month',
 };

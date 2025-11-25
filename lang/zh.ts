@@ -64,4 +64,5 @@ export const zh: Record<string, string> = {
     'prompt': '系统提示词 (Prompt)',
     'promptDesc': '发送给 AI 的指令，用于指导它如何生成周报。',
     'weekdaysShort': '一,二,三,四,五,六,日',
+    'monthTasksTitle': '本月未完成的任务',
 };

@@ -60,7 +60,8 @@ export default class WorkLoggerPlugin extends Plugin {
 class CalendarView extends ItemView {
 	plugin: WorkLoggerPlugin;
 	currentDate: moment.Moment;
-    existingDates: Set<string>; // 用于缓存存在日志的日期 (格式: YYYY-MM-DD)
+    existingDates: Set<string>;
+    tasksContainer: HTMLElement;
 
 	constructor(leaf: WorkspaceLeaf, plugin: WorkLoggerPlugin) {
 		super(leaf);
@@ -93,7 +94,6 @@ class CalendarView extends ItemView {
 		prevBtn.onclick = () => { this.currentDate.subtract(1, 'month'); void this.renderCalendar(); };
 		nextBtn.onclick = () => { this.currentDate.add(1, 'month'); void this.renderCalendar(); };
 
-        // 核心优化：一次性获取数据
         await this.fetchAndCacheExistingFiles();
 
 		const grid = container.createDiv({ cls: 'calendar-grid' });
@@ -105,7 +105,7 @@ class CalendarView extends ItemView {
         });
 
 		const startOfMonth = this.currentDate.clone().startOf('month');
-		let dayIterator = startOfMonth.clone().subtract(startOfMonth.isoWeekday() - 1, 'days');
+		const dayIterator = startOfMonth.clone().subtract(startOfMonth.isoWeekday() - 1, 'days');
         
 		for (let week = 0; week < 6; week++) {
             const weekStart = dayIterator.clone();
@@ -122,14 +122,12 @@ class CalendarView extends ItemView {
 				const cell = grid.createDiv({ cls: `day-cell ${isToday ? 'today' : ''}` });
                 if (!isCurrentMonth) cell.addClass('other-month');
 
-                // 使用缓存数据进行同步检查，而不是异步IO
                 if (this.existingDates.has(targetDate.format('YYYY-MM-DD'))) {
                     cell.addClass('has-data');
                 }
 
 				cell.createDiv({ cls: 'day-number' }).createSpan({ text: dayStr });
 
-                // 为标记创建一个容器，以便更好地对齐和支持多个标记
                 const markersContainer = cell.createDiv({ cls: 'markers' });
                 const checkIcon = markersContainer.createDiv({ cls: 'marker task-check' });
                 setIcon(checkIcon, 'check'); 
@@ -138,13 +136,64 @@ class CalendarView extends ItemView {
 				dayIterator.add(1, 'day');
 			}
 		}
+
+        // Add the new container for tasks
+        this.tasksContainer = container.createDiv({ cls: 'tasks-container' });
+        void this.renderIncompleteTasks();
 	}
+
+    async renderIncompleteTasks() {
+        this.tasksContainer.empty();
+        const tasks = await this.scanMonthForIncompleteTasks();
+
+        if (tasks.length === 0) {
+            return;
+        }
+
+        this.tasksContainer.createEl('h3', { text: t('monthTasksTitle'), cls: 'tasks-header' });
+        const listEl = this.tasksContainer.createEl('ul', { cls: 'task-list' });
+
+        const uniqueTasks = new Map<string, { task: string, path: string }>();
+        tasks.forEach(task => {
+            if (!uniqueTasks.has(task.task)) {
+                uniqueTasks.set(task.task, task);
+            }
+        });
+
+        uniqueTasks.forEach(task => {
+            const itemEl = listEl.createEl('li', { cls: 'task-item', text: task.task });
+            itemEl.onclick = () => {
+                void this.app.workspace.openLinkText(task.path, '');
+            };
+        });
+    }
+
+    async scanMonthForIncompleteTasks(): Promise<{ task: string, path: string }[]> {
+        const tasks: { task: string, path: string }[] = [];
+        const month = this.currentDate.month();
+        const year = this.currentDate.year();
+        const daysInMonth = this.currentDate.daysInMonth();
+        const taskRegex = /^\s*-\s*\[\s\]\s*(.+)/gm;
+
+        for (let i = 1; i <= daysInMonth; i++) {
+            const date = moment({ year, month, day: i });
+            const filePath = this.getFilePath(date);
+
+            if (await this.app.vault.adapter.exists(filePath)) {
+                const content = await this.app.vault.adapter.read(filePath);
+                let match;
+                while ((match = taskRegex.exec(content)) !== null) {
+                    tasks.push({ task: match[1].trim(), path: filePath });
+                }
+            }
+        }
+        return tasks;
+    }
 
     async fetchAndCacheExistingFiles() {
         this.existingDates.clear();
         const root = this.plugin.settings.rootFolder;
         
-        // 扫描上个月、当前月、下个月的文件夹
         for (let i = -1; i <= 1; i++) {
             const monthToScan = this.currentDate.clone().add(i, 'month');
             const folderPath = `${root}/${monthToScan.format('YYYYMM')}`;
@@ -152,7 +201,7 @@ class CalendarView extends ItemView {
             if (await this.app.vault.adapter.exists(folderPath)) {
                 const { files } = await this.app.vault.adapter.list(folderPath);
                 files.forEach(filePath => {
-                    const day = filePath.split('/').pop()?.split('.')[0]; // DD.md -> DD
+                    const day = filePath.split('/').pop()?.split('.')[0];
                     if (day) {
                         const dateStr = `${monthToScan.format('YYYY-MM')}-${day.padStart(2, '0')}`;
                         this.existingDates.add(dateStr);
