@@ -1,6 +1,6 @@
-![Work Logger Banner](./images/promo-banner.svg)
-
 # Obsidian Work Logger
+
+![Work Logger Banner](./images/promo-banner-en.svg)
 
 A minimalist, calendar-based time tracking and weekly reporting plugin for Obsidian. It allows you to log daily tasks using simple Markdown and automatically generates weekly reports. With the latest update, it now features **AI-powered weekly summaries**, helping you to draft professional reports effortlessly.
 
@@ -79,6 +79,8 @@ In the report modal, click the **copy icon** to paste the time statistics table 
 ---
 
 ## <h2 id="中文说明">🇨🇳 中文说明</h2>
+
+![Work Logger Banner](./images/promo-banner-zh.svg)
 
 Obsidian Work Logger 是一个极简的工时记录与周报生成插件。它能让你通过简单的 Markdown 语法记录每日任务，并自动生成周报统计。最新版本更集成了 **AI 智能摘要功能**，帮你轻松草拟专业周报。
 
