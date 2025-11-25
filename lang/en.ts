@@ -3,7 +3,7 @@ export const en: Record<string, string> = {
     'openCalendar': 'Open work logger calendar',
 
     // calendar view
-    'viewTitle': 'Work Logger',
+    'viewTitle': 'Work logger',
     'prevMonth': 'Previous month',
     'nextMonth': 'Next month',
     'dateFormat': 'MMMM YYYY',
@@ -20,12 +20,12 @@ export const en: Record<string, string> = {
 `,
 
     // report modal
-    'reportTitle': 'Weekly Work Report',
+    'reportTitle': 'Weekly work report',
     'aiTitle': 'Generate with AI',
     'copyTooltip': 'Copy table to clipboard',
     'taskContent': 'Task',
     'durationHours': 'Hours',
-    'durationDays': 'Man-Days',
+    'durationDays': 'Man-days',
     'total': 'Total',
     'noData': 'No timed tasks were parsed for this week',
     'copySuccess': 'Copied to clipboard',
@@ -38,7 +38,7 @@ export const en: Record<string, string> = {
     'aiError': 'AI generation failed: ',
     'aiPrompt': `You are a professional weekly report assistant. Based on the following week's work log content (including daily task records and possible daily summaries), please generate a concise weekly work summary for me.
 Requirements:
-1. Include three parts: "Key Work This Week", "Problems and Solutions", and "Next Week's Plan Suggestions".
+1. Include three parts: "Key work this week", "Problems and solutions", and "Next week's plan suggestions".
 2. The language should be concise and professional.
 3. Ignore trivial non-work content.
 4. Output the content directly in Markdown format.
@@ -47,21 +47,21 @@ Here is the raw log data for this week:
 `,
 
     // settings
-    'settingsTitle': 'Work Logger Plugin Settings',
-    'rootFolder': 'Log Root Folder',
+    'settingsTitle': 'Work logger plugin settings',
+    'rootFolder': 'Log root folder',
     'rootFolderDesc': 'The folder where daily work logs are stored.',
-    'hoursPerDay': 'Standard Hours per Day',
+    'hoursPerDay': 'Standard hours per day',
     'hoursPerDayDesc': 'Used to calculate man-days, e.g., 8 hours/day.',
 
-    'aiConfigTitle': 'AI Assistant Configuration',
+    'aiConfigTitle': 'AI assistant configuration',
     'aiConfigDesc': 'Configure a model service compatible with the OpenAI API standard for generating weekly summaries.',
-    'apiEndpoint': 'API Endpoint',
+    'apiEndpoint': 'API endpoint',
     'apiEndpointDesc': 'The API address of the large language model service, e.g., https://api.openai.com/v1/chat/completions',
-    'apiKey': 'API Key',
+    'apiKey': 'API key',
     'apiKeyDesc': 'The API Key from your model service provider.',
-    'modelName': 'Model Name',
+    'modelName': 'Model name',
     'modelNameDesc': 'The specific model to use, e.g., gpt-4, gemini-2.5-flash.',
-    'prompt': 'System Prompt',
+    'prompt': 'System prompt',
     'promptDesc': 'The instruction sent to the AI to guide how it generates the weekly report.',
     'weekdaysShort': 'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
 };

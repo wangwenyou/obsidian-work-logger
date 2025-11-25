@@ -1,5 +1,4 @@
-import { App, Modal, Plugin, ItemView, WorkspaceLeaf, TFile, Setting, PluginSettingTab, setIcon, ButtonComponent, Notice, requestUrl, MarkdownRenderer, Component } from 'obsidian';
-import moment from 'moment';
+import { App, Modal, Plugin, ItemView, WorkspaceLeaf, TFile, Setting, PluginSettingTab, setIcon, ButtonComponent, Notice, requestUrl, MarkdownRenderer, Component, moment } from 'obsidian';
 import { t } from './lang'; // 引入国际化模块
 
 const VIEW_TYPE_CALENDAR = "work-logger-calendar";
@@ -30,7 +29,7 @@ export default class WorkLoggerPlugin extends Plugin {
 		await this.loadSettings();
 		this.registerView(VIEW_TYPE_CALENDAR, (leaf) => new CalendarView(leaf, this));
 		this.addRibbonIcon('calendar-with-checkmark', t('openCalendar'), () => {
-			this.activateView();
+			void this.activateView();
 		});
 		this.addSettingTab(new WorkLoggerSettingTab(this.app, this));
 	}
@@ -91,8 +90,8 @@ class CalendarView extends ItemView {
 		const nextBtn = header.createEl('button', { attr: { 'aria-label': t('nextMonth') } });
         setIcon(nextBtn, 'arrow-right');
 
-		prevBtn.onclick = async () => { this.currentDate.subtract(1, 'month'); await this.renderCalendar(); };
-		nextBtn.onclick = async () => { this.currentDate.add(1, 'month'); await this.renderCalendar(); };
+		prevBtn.onclick = () => { this.currentDate.subtract(1, 'month'); void this.renderCalendar(); };
+		nextBtn.onclick = () => { this.currentDate.add(1, 'month'); void this.renderCalendar(); };
 
         // 核心优化：一次性获取数据
         await this.fetchAndCacheExistingFiles();
@@ -112,7 +111,7 @@ class CalendarView extends ItemView {
             const weekStart = dayIterator.clone();
 			const weekBtn = grid.createDiv({ cls: 'week-stat-btn', attr: {'aria-label': t('weekStatTooltip')} });
             setIcon(weekBtn, "bar-chart-3"); 
-			weekBtn.onclick = (e) => { e.stopPropagation(); this.generateWeekReport(weekStart); };
+			weekBtn.onclick = (e) => { e.stopPropagation(); void this.generateWeekReport(weekStart); };
 
 			for (let d = 0; d < 7; d++) {
 				const dayStr = dayIterator.format('D');
@@ -135,7 +134,7 @@ class CalendarView extends ItemView {
                 const checkIcon = markersContainer.createDiv({ cls: 'marker task-check' });
                 setIcon(checkIcon, 'check'); 
                 
-				cell.onclick = () => this.openDailyNote(targetDate);
+				cell.onclick = () => { void this.openDailyNote(targetDate); };
 				dayIterator.add(1, 'day');
 			}
 		}
@@ -170,7 +169,9 @@ class CalendarView extends ItemView {
 	async openDailyNote(date: moment.Moment) {
 		const filePath = this.getFilePath(date);
         const folderPath = filePath.substring(0, filePath.lastIndexOf('/'));
-        if (!(await this.app.vault.adapter.exists(folderPath))) await this.app.vault.createFolder(folderPath);
+        if (!(await this.app.vault.adapter.exists(folderPath))) {
+            await this.app.vault.createFolder(folderPath);
+        }
 
 		let file = this.app.vault.getAbstractFileByPath(filePath);
 		if (!file) {
@@ -178,7 +179,9 @@ class CalendarView extends ItemView {
             const templateStr = t('dailyNoteTemplate').replace('YYYY-MM-DD', date.format('YYYY-MM-DD'));
 			file = await this.app.vault.create(filePath, templateStr);
 		}
-		if (file instanceof TFile) this.app.workspace.getLeaf(false).openFile(file);
+		if (file instanceof TFile) {
+            await this.app.workspace.getLeaf(false).openFile(file);
+        }
 	}
 
 	async generateWeekReport(weekStart: moment.Moment) {
@@ -234,6 +237,7 @@ class ReportModal extends Modal {
     settings: WorkLoggerSettings;
     rawContent: string;
     aiContainer: HTMLElement;
+    component: Component;
 
 	constructor(app: App, stats: Record<string, number>, weekStart: moment.Moment, settings: WorkLoggerSettings, rawContent: string) {
 		super(app);
@@ -241,11 +245,11 @@ class ReportModal extends Modal {
         this.weekStart = weekStart;
         this.settings = settings;
         this.rawContent = rawContent;
+        this.component = new Component();
 	}
 
 	onOpen() {
 		const { contentEl } = this;
-        contentEl.style.userSelect = "text"; 
         contentEl.addClass('work-logger-modal');
         
         const weekRange = `${this.weekStart.format('MM-DD')} - ${this.weekStart.clone().add(6, 'days').format('MM-DD')}`;
@@ -258,12 +262,12 @@ class ReportModal extends Modal {
         new ButtonComponent(actionDiv)
             .setIcon('sparkles')
             .setTooltip(t('aiTitle'))
-            .onClick(() => this.generateAISummary());
+            .onClick(() => { void this.generateAISummary(); });
         
         new ButtonComponent(actionDiv)
             .setIcon('copy')
             .setTooltip(t('copyTooltip'))
-            .onClick(() => this.copyToClipboard());
+            .onClick(() => { void this.copyToClipboard(); });
 
 		const table = contentEl.createEl('table', { cls: 'stat-table' });
         const thead = table.createEl('thead');
@@ -319,7 +323,7 @@ class ReportModal extends Modal {
         try {
             const summary = await this.callLLM(this.rawContent);
             this.aiContainer.empty();
-            MarkdownRenderer.render(this.app, summary, this.aiContainer, '', new Component());
+            await MarkdownRenderer.render(this.app, summary, this.aiContainer, '', this.component);
         } catch (error) {
             this.aiContainer.empty();
             this.aiContainer.createEl('p', { 
@@ -357,11 +361,15 @@ class ReportModal extends Modal {
 
         if (response.status !== 200) throw new Error(`API Error (${response.status}): ${response.text}`);
         const data = response.json;
-        if (data.choices && data.choices.length > 0) return data.choices[0].message.content;
-        else throw new Error("API response invalid: no choices found");
+        if (data.choices && data.choices.length > 0) {
+            return data.choices[0].message.content;
+        }
+        else {
+            throw new Error("API response invalid: no choices found");
+        }
     }
 
-    copyToClipboard() {
+    async copyToClipboard() {
         let clipboardText = `${t('taskContent')}\t${t('durationHours')}\t${t('durationDays')}\n`;
         let totalH = 0;
         for (const [task, hours] of Object.entries(this.stats)) {
@@ -370,10 +378,14 @@ class ReportModal extends Modal {
             clipboardText += `${task}\t${hours.toFixed(2)}\t${days}\n`;
         }
         clipboardText += `${t('total')}\t${totalH.toFixed(2)}\t${(totalH / this.settings.hoursPerDay).toFixed(2)}`;
-        navigator.clipboard.writeText(clipboardText).then(() => { new Notice(t('copySuccess')); });
+        await navigator.clipboard.writeText(clipboardText);
+        new Notice(t('copySuccess'));
     }
 
-	onClose() { this.contentEl.empty(); }
+	onClose() { 
+        this.component.unload();
+        this.contentEl.empty(); 
+    }
 }
 
 class WorkLoggerSettingTab extends PluginSettingTab {
@@ -382,7 +394,7 @@ class WorkLoggerSettingTab extends PluginSettingTab {
 	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
-		containerEl.createEl('h2', { text: t('settingsTitle') });
+		new Setting(containerEl).setHeading().setName(t('settingsTitle'));
 		
         new Setting(containerEl).setName(t('rootFolder')).setDesc(t('rootFolderDesc'))
 			.addText(text => text.setPlaceholder('Timesheets').setValue(this.plugin.settings.rootFolder)
@@ -390,9 +402,15 @@ class WorkLoggerSettingTab extends PluginSettingTab {
         
         new Setting(containerEl).setName(t('hoursPerDay')).setDesc(t('hoursPerDayDesc'))
 			.addText(text => text.setPlaceholder('8').setValue(String(this.plugin.settings.hoursPerDay))
-				.onChange(async (value) => { const num = parseFloat(value); if (!isNaN(num)) { this.plugin.settings.hoursPerDay = num; await this.plugin.saveSettings(); } }));
+				.onChange(async (value) => { 
+                    const num = parseFloat(value); 
+                    if (!isNaN(num)) { 
+                        this.plugin.settings.hoursPerDay = num; 
+                        await this.plugin.saveSettings(); 
+                    } 
+                }));
 
-        containerEl.createEl('h3', { text: t('aiConfigTitle') });
+        new Setting(containerEl).setHeading().setName(t('aiConfigTitle'));
         containerEl.createEl('p', { text: t('aiConfigDesc'), cls: 'setting-item-description' });
 
         new Setting(containerEl).setName(t('apiEndpoint')).setDesc(t('apiEndpointDesc'))
