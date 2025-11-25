@@ -1,6 +1,8 @@
+![Work Logger Banner](./images/promo-banner.svg)
+
 # Obsidian Work Logger
 
-A minimalist, calendar-based time tracking and weekly reporting plugin for Obsidian. It allows you to log daily tasks using simple Markdown and automatically generates weekly reports. With the latest update, it now features **AI-powered weekly summaries**, helping you draft professional reports effortlessly.
+A minimalist, calendar-based time tracking and weekly reporting plugin for Obsidian. It allows you to log daily tasks using simple Markdown and automatically generates weekly reports. With the latest update, it now features **AI-powered weekly summaries**, helping you to draft professional reports effortlessly.
 
 ---
 
@@ -69,7 +71,7 @@ In the report modal, click the **copy icon** to paste the time statistics table 
 4.  Click `Install` and then `Enable`.
 
 #### Manual Installation
-1.  Download `main.js`, `manifest.json`, and `styles.css` from the [latest Release](https://github.com/wangwenyou/obsidian-work-logger/releases).
+1.  From [Releases page](https://github.com/wangwenyou/obsidian-work-logger/releases) download the latest `main.js`, `manifest.json`, and `styles.css` files.
 2.  Create a folder named `work-logger` in your vault's `.obsidian/plugins/` directory.
 3.  Paste the files into that folder.
 4.  Reload Obsidian and enable the plugin in Settings.
@@ -141,7 +143,7 @@ Obsidian Work Logger 是一个极简的工时记录与周报生成插件。它�
 4.  点击 `安装`，然后 `启用`。
 
 #### 手动安装
-1.  从 [Releases 页面](https://github.com/wangwenyou/obsidian-work-logger/releases) 下载最新的 `main.js`, `manifest.json`, `styles.css` 文件。
+1.  从 [Releases 页面](https://github.com/wangwenyou/obsidian-work-logger/releases) 下载最新的 `main.js`, `manifest.json`, and `styles.css` 文件。
 2.  在你的 Obsidian 仓库中的 `.obsidian/plugins/` 目录下，创建一个名为 `work-logger` 的文件夹。
 3.  将下载的三个文件粘贴进去。
 4.  重启 Obsidian，在设置中启用插件。
