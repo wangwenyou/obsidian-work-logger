@@ -1,16 +1,17 @@
 import { App, Modal, Plugin, ItemView, WorkspaceLeaf, TFile, Setting, PluginSettingTab, setIcon, ButtonComponent, Notice, requestUrl, MarkdownRenderer, Component, moment } from 'obsidian';
-import { t } from './lang'; // 引入国际化模块
+import { t } from './lang';
+import { createTimeInserterExtension } from './editor-extension';
 
 const VIEW_TYPE_CALENDAR = "work-logger-calendar";
 
 interface WorkLoggerSettings {
 	rootFolder: string;
 	hoursPerDay: number;
-    // AI Configurations
     llmEndpoint: string;
     llmApiKey: string;
     llmModel: string;
     llmPrompt: string;
+    autoAddTimeOnEnter: boolean;
 }
 
 const DEFAULT_SETTINGS: WorkLoggerSettings = {
@@ -20,6 +21,7 @@ const DEFAULT_SETTINGS: WorkLoggerSettings = {
     llmApiKey: '', 
     llmModel: 'gemini-2.5-flash', 
     llmPrompt: t('aiPrompt'),
+    autoAddTimeOnEnter: true,
 }
 
 export default class WorkLoggerPlugin extends Plugin {
@@ -32,6 +34,7 @@ export default class WorkLoggerPlugin extends Plugin {
 			void this.activateView();
 		});
 		this.addSettingTab(new WorkLoggerSettingTab(this.app, this));
+        this.registerEditorExtension(createTimeInserterExtension(this));
 	}
 
 	async loadSettings() {
@@ -137,7 +140,6 @@ class CalendarView extends ItemView {
 			}
 		}
 
-        // Add the new container for tasks
         this.tasksContainer = container.createDiv({ cls: 'tasks-container' });
         void this.renderIncompleteTasks();
 	}
@@ -180,10 +182,14 @@ class CalendarView extends ItemView {
             const filePath = this.getFilePath(date);
 
             if (await this.app.vault.adapter.exists(filePath)) {
-                const content = await this.app.vault.adapter.read(filePath);
-                let match;
-                while ((match = taskRegex.exec(content)) !== null) {
-                    tasks.push({ task: match[1].trim(), path: filePath });
+                try {
+                    const content = await this.app.vault.adapter.read(filePath);
+                    let match;
+                    while ((match = taskRegex.exec(content)) !== null) {
+                        tasks.push({ task: match[1].trim(), path: filePath });
+                    }
+                } catch (e) {
+                    console.error(`Work Logger: Could not read file ${filePath}`, e);
                 }
             }
         }
@@ -199,14 +205,18 @@ class CalendarView extends ItemView {
             const folderPath = `${root}/${monthToScan.format('YYYYMM')}`;
             
             if (await this.app.vault.adapter.exists(folderPath)) {
-                const { files } = await this.app.vault.adapter.list(folderPath);
-                files.forEach(filePath => {
-                    const day = filePath.split('/').pop()?.split('.')[0];
-                    if (day) {
-                        const dateStr = `${monthToScan.format('YYYY-MM')}-${day.padStart(2, '0')}`;
-                        this.existingDates.add(dateStr);
-                    }
-                });
+                try {
+                    const { files } = await this.app.vault.adapter.list(folderPath);
+                    files.forEach(filePath => {
+                        const day = filePath.split('/').pop()?.split('.')[0];
+                        if (day) {
+                            const dateStr = `${monthToScan.format('YYYY-MM')}-${day.padStart(2, '0')}`;
+                            this.existingDates.add(dateStr);
+                        }
+                    });
+                } catch (e) {
+                    console.error(`Work Logger: Could not list files in ${folderPath}`, e);
+                }
             }
         }
     }
@@ -224,7 +234,6 @@ class CalendarView extends ItemView {
 
 		let file = this.app.vault.getAbstractFileByPath(filePath);
 		if (!file) {
-            // 根据当前语言替换模板中的日期占位符
             const templateStr = t('dailyNoteTemplate').replace('YYYY-MM-DD', date.format('YYYY-MM-DD'));
 			file = await this.app.vault.create(filePath, templateStr);
 		}
@@ -360,6 +369,7 @@ class ReportModal extends Modal {
     async generateAISummary() {
         if (!this.settings.llmApiKey && !this.settings.llmEndpoint.includes('localhost')) {
             new Notice(t('aiApiKeyMissing'));
+            return;
         }
         if (!this.rawContent.trim()) {
             new Notice(t('aiNoContent'));
@@ -457,6 +467,16 @@ class WorkLoggerSettingTab extends PluginSettingTab {
                         this.plugin.settings.hoursPerDay = num; 
                         await this.plugin.saveSettings(); 
                     } 
+                }));
+
+        new Setting(containerEl)
+            .setName(t('autoAddTimeOnEnter'))
+            .setDesc(t('autoAddTimeOnEnterDesc'))
+            .addToggle(toggle => toggle
+                .setValue(this.plugin.settings.autoAddTimeOnEnter)
+                .onChange(async (value) => {
+                    this.plugin.settings.autoAddTimeOnEnter = value;
+                    await this.plugin.saveSettings();
                 }));
 
         new Setting(containerEl).setHeading().setName(t('aiConfigTitle'));

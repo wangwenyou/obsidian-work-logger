@@ -65,4 +65,6 @@ export const zh: Record<string, string> = {
     'promptDesc': '发送给 AI 的指令，用于指导它如何生成周报。',
     'weekdaysShort': '一,二,三,四,五,六,日',
     'monthTasksTitle': '本月未完成的任务',
+    'autoAddTimeOnEnter': '回车自动添加时间',
+    'autoAddTimeOnEnterDesc': '启用后，在清单项上按回车会自动创建新清单项并带上当前时间。',
 };
