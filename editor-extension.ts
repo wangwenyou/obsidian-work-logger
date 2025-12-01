@@ -18,6 +18,13 @@ export function createTimeInserterExtension(plugin: WorkLoggerPlugin) {
                 return;
             }
 
+            // --- 新增的守卫检查 ---
+            const activeFile = plugin.app.workspace.getActiveFile();
+            if (!activeFile || !activeFile.path.startsWith(plugin.settings.rootFolder)) {
+                return; // 如果不是工作日志文件，则不执行任何操作
+            }
+            // --- 守卫检查结束 ---
+
             for (const tr of update.transactions) {
                 // 检查是否是“插入换行符”的操作 (即按下了 Enter 键)
                 if (tr.isUserEvent('input.type.newline') || tr.isUserEvent('input.newline')) {
