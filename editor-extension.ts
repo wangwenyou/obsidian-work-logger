@@ -1,7 +1,7 @@
 import { EditorView, ViewPlugin, ViewUpdate } from '@codemirror/view';
 import { EditorSelection } from '@codemirror/state';
 import { moment } from 'obsidian';
-import WorkLoggerPlugin from './main';
+import type WorkLoggerPlugin from './main';
 
 // 这是一个工厂函数，用于创建和管理编辑器扩展
 export function createTimeInserterExtension(plugin: WorkLoggerPlugin) {
