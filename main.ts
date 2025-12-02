@@ -1,6 +1,5 @@
-import { App, Modal, Plugin, ItemView, WorkspaceLeaf, TFile, Setting, PluginSettingTab, setIcon, ButtonComponent, Notice, requestUrl, MarkdownRenderer, Component, moment } from 'obsidian';
+import { App, Modal, Plugin, ItemView, WorkspaceLeaf, TFile, Setting, PluginSettingTab, setIcon, ButtonComponent, Notice, requestUrl, MarkdownRenderer, Component, moment, Editor, MarkdownView } from 'obsidian';
 import { t } from './lang';
-import { createTimeInserterExtension } from './editor-extension';
 
 const VIEW_TYPE_CALENDAR = "work-logger-calendar";
 
@@ -11,7 +10,8 @@ interface WorkLoggerSettings {
     llmApiKey: string;
     llmModel: string;
     llmPrompt: string;
-    autoAddTimeOnEnter: boolean;
+    defaultStartTime: string;
+    defaultEndTime: string;
 }
 
 const DEFAULT_SETTINGS: WorkLoggerSettings = {
@@ -21,7 +21,8 @@ const DEFAULT_SETTINGS: WorkLoggerSettings = {
     llmApiKey: '', 
     llmModel: 'gemini-2.5-flash', 
     llmPrompt: t('aiPrompt'),
-    autoAddTimeOnEnter: true,
+    defaultStartTime: '09:00',
+    defaultEndTime: '18:00',
 }
 
 export default class WorkLoggerPlugin extends Plugin {
@@ -34,7 +35,36 @@ export default class WorkLoggerPlugin extends Plugin {
 			void this.activateView();
 		});
 		this.addSettingTab(new WorkLoggerSettingTab(this.app, this));
-        this.registerEditorExtension(createTimeInserterExtension(this));
+
+        this.addCommand({
+            id: 'insert-timed-list-item',
+            name: t('insertTimedListItem'),
+            editorCallback: (editor: Editor, view: MarkdownView) => {
+                const doc = editor.getDoc();
+                const cursor = doc.getCursor();
+                const line = doc.getLine(cursor.line);
+
+                // Check if we are in a work log file
+                if (!view.file || !view.file.path.startsWith(this.settings.rootFolder)) {
+                    new Notice("Work Logger: This command only works in work log files.");
+                    return;
+                }
+
+                const timeStr = moment().format("HH:mm");
+                
+                // If the current line is a list item, insert a new line with time below it.
+                // Otherwise, just insert it at the cursor.
+                if (line.trim().startsWith('-')) {
+                    const newText = `\n- ${timeStr} `;
+                    editor.replaceRange(newText, { line: cursor.line, ch: line.length });
+                    doc.setCursor({ line: cursor.line + 1, ch: newText.length - 1 });
+                } else {
+                    const newText = `- ${timeStr} `;
+                    editor.replaceSelection(newText);
+                    doc.setCursor(editor.getCursor());
+                }
+            }
+        });
 	}
 
 	async loadSettings() {
@@ -234,7 +264,9 @@ class CalendarView extends ItemView {
 
 		let file = this.app.vault.getAbstractFileByPath(filePath);
 		if (!file) {
-            const templateStr = t('dailyNoteTemplate').replace('YYYY-MM-DD', date.format('YYYY-MM-DD'));
+            const templateStr = t('dailyNoteTemplate')
+                .replace('{{startTime}}', this.plugin.settings.defaultStartTime)
+                .replace('{{endTime}}', this.plugin.settings.defaultEndTime);
 			file = await this.app.vault.create(filePath, templateStr);
 		}
 		if (file instanceof TFile) {
@@ -470,14 +502,24 @@ class WorkLoggerSettingTab extends PluginSettingTab {
                 }));
 
         new Setting(containerEl)
-            .setName(t('autoAddTimeOnEnter'))
-            .setDesc(t('autoAddTimeOnEnterDesc'))
-            .addToggle(toggle => toggle
-                .setValue(this.plugin.settings.autoAddTimeOnEnter)
+            .setName(t('defaultStartTime'))
+            .setDesc(t('defaultStartTimeDesc'))
+            .addText(text => text.setPlaceholder('09:00').setValue(this.plugin.settings.defaultStartTime)
                 .onChange(async (value) => {
-                    this.plugin.settings.autoAddTimeOnEnter = value;
+                    this.plugin.settings.defaultStartTime = value;
                     await this.plugin.saveSettings();
                 }));
+        
+        new Setting(containerEl)
+            .setName(t('defaultEndTime'))
+            .setDesc(t('defaultEndTimeDesc'))
+            .addText(text => text.setPlaceholder('18:00').setValue(this.plugin.settings.defaultEndTime)
+                .onChange(async (value) => {
+                    this.plugin.settings.defaultEndTime = value;
+                    await this.plugin.saveSettings();
+                }));
+
+
 
         new Setting(containerEl).setHeading().setName(t('aiConfigTitle'));
         containerEl.createEl('p', { text: t('aiConfigDesc'), cls: 'setting-item-description' });

@@ -15,6 +15,7 @@ export const en: Record<string, string> = {
 
 ### Work Records
 - 09:00 
+- 18:00 
 
 ### Daily Summary
 `,
@@ -52,6 +53,10 @@ Here is the raw log data for this week:
     'rootFolderDesc': 'The folder where daily work logs are stored.',
     'hoursPerDay': 'Standard hours per day',
     'hoursPerDayDesc': 'Used to calculate man-days, e.g., 8 hours/day.',
+    'defaultStartTime': 'Default start time',
+    'defaultStartTimeDesc': 'The default start time to be inserted into a new daily note.',
+    'defaultEndTime': 'Default end time',
+    'defaultEndTimeDesc': 'The default end time to be inserted into a new daily note.',
 
     'aiConfigTitle': 'AI assistant configuration',
     'aiConfigDesc': 'Configure a model service compatible with the OpenAI API standard for generating weekly summaries.',
@@ -65,6 +70,5 @@ Here is the raw log data for this week:
     'promptDesc': 'The instruction sent to the AI to guide how it generates the weekly report.',
     'weekdaysShort': 'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
     'monthTasksTitle': 'Incomplete tasks this month',
-    'autoAddTimeOnEnter': 'Auto add time on enter',
-    'autoAddTimeOnEnterDesc': 'When enabled, pressing Enter on a list item will automatically create a new list item with the current time.',
+    'insertTimedListItem': 'Insert new list item with time',
 };

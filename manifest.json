@@ -1,7 +1,7 @@
 {
 	"id": "work-logger",
 	"name": "Work Logger",
-	"version": "1.0.1",
+	"version": "1.0.4",
 	"minAppVersion": "0.15.0",
 	"description": "Track daily tasks and generate weekly reports via a calendar view, with AI-powered summaries.",
 	"author": "wangwenyou",
