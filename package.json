@@ -1,6 +1,6 @@
 {
     "name": "work-logger",
-    "version": "1.0.1",
+    "version": "1.0.5",
     "description": "Track daily tasks and generate weekly reports via a calendar view, with AI-powered summaries.",
     "main": "main.js",
     "scripts": {
@@ -26,7 +26,7 @@
         "@types/node": "^16.18.96",
         "@typescript-eslint/eslint-plugin": "^7.7.0",
         "@typescript-eslint/parser": "^7.7.0",
-        "@obsidianmd/eslint-plugin": "^0.5.0",
+        "eslint-plugin-obsidianmd": "^0.5.0",
         "eslint": "^8.57.0",
         "obsidian": "latest",
         "rollup": "^4.16.4",

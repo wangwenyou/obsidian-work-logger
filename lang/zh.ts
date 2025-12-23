@@ -14,8 +14,8 @@ export const zh: Record<string, string> = {
 - [ ] 
 
 ### 工作记录
-- 09:00 
-- 18:00 
+- {{startTime}} 
+- {{endTime}} 下班
 
 ### 今日总结
 `,
@@ -65,7 +65,10 @@ export const zh: Record<string, string> = {
     'prompt': '系统提示词 (Prompt)',
     'promptDesc': '发送给 AI 的指令，用于指导它如何生成周报。',
     'weekdaysShort': '一,二,三,四,五,六,日',
-    'monthTasksTitle': '本月未完成的任务',
+    'monthTasksTitle': '本月待办',
+    'noIncompleteTasks': '本月没有未完成的任务！',
+    'timelineTitle': '时间线',
+    'timelineEmpty': '请打开工作日志文件查看时间线',
     'defaultStartTime': '默认开始时间',
     'defaultStartTimeDesc': '创建新日报时，自动插入的默认开始时间。',
     'defaultEndTime': '默认结束时间',

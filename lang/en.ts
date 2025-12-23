@@ -14,8 +14,8 @@ export const en: Record<string, string> = {
 - [ ] 
 
 ### Work Records
-- 09:00 
-- 18:00 
+- {{startTime}} 
+- {{endTime}} Off-duty
 
 ### Daily Summary
 `,
@@ -69,6 +69,9 @@ Here is the raw log data for this week:
     'prompt': 'System prompt',
     'promptDesc': 'The instruction sent to the AI to guide how it generates the weekly report.',
     'weekdaysShort': 'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
-    'monthTasksTitle': 'Incomplete tasks this month',
+    'monthTasksTitle': 'Todos this month',
+    'noIncompleteTasks': 'No incomplete tasks this month!',
+    'timelineTitle': 'Timeline',
+    'timelineEmpty': 'Open a work log file to view timeline',
     'insertTimedListItem': 'Insert new list item with time',
 };
