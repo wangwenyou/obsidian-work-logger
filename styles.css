@@ -1,22 +1,22 @@
-/*
- * Work Logger - Modern Calendar Design
- */
-
+/* === Variables (Merged & Optimized) === */
 :root {
+    /* Reference Palette */
     --wl-accent-color: #4A90E2;
     --wl-accent-color-rgb: 74, 144, 226;
     --wl-text-on-accent: #ffffff;
-    --wl-background-primary: #F8F9FA;
-    --wl-background-secondary: #E9ECEF;
-    --wl-background-tertiary: #DEE2E6;
-    --wl-border-color: #CED4DA;
-    --wl-text-normal: #343A40;
-    --wl-text-muted: #6C757D;
-    --wl-text-faint: #ADB5BD;
+    --wl-background-primary: #ffffff; /* Default Obsidian light is usually white */
+    --wl-background-secondary: #f8f9fa;
+    --wl-background-tertiary: #e9ecef;
+    --wl-border-color: #ced4da;
+    --wl-text-normal: #343a40;
+    --wl-text-muted: #6c757d;
+    --wl-text-faint: #adb5bd;
     --wl-radius: 12px;
     --wl-radius-small: 8px;
     --wl-spacing: 24px;
     --wl-transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Category Colors */
     --wl-accent-secondary: #FF6B6B;
     --wl-accent-cyan: #00A896;
     --wl-red: #FF6B6B;
@@ -24,32 +24,42 @@
     --wl-blue: #4A90E2;
     --wl-purple: #A855F7;
     --wl-yellow: #FFD93D;
+    
+    /* Legacy/Dashboard specific (Preserved) */
+    --wl-navy: #192A56;
+    --wl-primary-color: #4a90e2;
+    --wl-secondary-color: #50e3c2;
+    --wl-cyan-legacy: #06D6A0;
 }
 
 .theme-dark {
+    /* Reference Palette Dark */
     --wl-accent-color: #4A90E2;
     --wl-accent-color-rgb: 74, 144, 226;
-    --wl-background-primary: #212529;
-    --wl-background-secondary: #343A40;
-    --wl-background-tertiary: #495057;
-    --wl-border-color: #495057;
-    --wl-text-normal: #F8F9FA;
-    --wl-text-muted: #CED4DA;
+    --wl-background-primary: #202020;
+    --wl-background-secondary: #2C2E33;
+    --wl-background-tertiary: #343A40;
+    --wl-border-color: #333;
+    --wl-text-normal: #dcddde;
+    --wl-text-muted: #999;
     --wl-text-faint: #6C757D;
     --wl-accent-secondary: #FF6B6B;
+    
+    /* Legacy/Dashboard specific */
+    --wl-navy: #A5B4FC; 
 }
 
+/* === Main Container === */
 .work-logger-container {
-    padding: var(--wl-spacing);
+    padding: 16px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background-color: var(--wl-background-primary);
-    border-radius: var(--wl-radius);
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 16px;
+    height: 100%;
 }
 
-/* === Header === */
+/* === Sidebar Calendar (Restored from Reference) === */
 .calendar-header {
     display: flex;
     justify-content: space-between;
@@ -72,6 +82,9 @@
     padding: 8px;
     cursor: pointer;
     transition: var(--wl-transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .calendar-header button:hover {
@@ -79,12 +92,13 @@
     color: var(--wl-accent-color);
 }
 
-/* === Calendar Grid === */
 .calendar-grid {
     display: grid;
-    grid-template-columns: 40px repeat(7, 1fr);
+    grid-template-columns: 40px repeat(7, 1fr); /* 8 columns: 1 for button, 7 for days */
     gap: 4px;
     text-align: center;
+    align-items: center;
+    margin-bottom: 16px;
 }
 
 .day-header {
@@ -102,11 +116,17 @@
     flex-direction: column;
     align-items: center;
     gap: 3px;
+    border-radius: var(--wl-radius-small);
+    transition: background-color 0.2s;
+}
+
+.day-cell:hover {
+    background-color: var(--wl-background-secondary);
 }
 
 .day-number {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -117,10 +137,6 @@
     transition: var(--wl-transition);
 }
 
-.day-cell:hover .day-number {
-    background-color: var(--wl-background-secondary);
-}
-
 .day-cell.today .day-number {
     background-color: var(--wl-accent-color);
     color: white;
@@ -129,6 +145,7 @@
 
 .day-cell.other-month { opacity: 0.3; }
 
+/* The missing indicator! */
 .event-mark {
     width: 4px;
     height: 4px;
@@ -144,6 +161,7 @@
     color: var(--wl-text-faint);
     border-radius: 8px;
     transition: var(--wl-transition);
+    height: 32px;
 }
 
 .week-stat-btn:hover {
@@ -151,7 +169,7 @@
     color: white;
 }
 
-/* === Task List (本月未完成任务) === */
+/* === Task List (Sidebar) === */
 .tasks-container {
     border-top: 1px solid var(--wl-border-color);
     padding-top: 16px;
@@ -173,27 +191,26 @@
     gap: 8px;
 }
 
-/* 任务卡片 - 单行布局：复选框 + 任务文本 + 日期 */
 .task-card {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 12px;
-    background: white;
-    border: 1px solid #f0f0f0;
-    border-radius: 10px;
+    padding: 8px 10px;
+    background: var(--wl-background-primary);
+    border: 1px solid var(--wl-border-color);
+    border-radius: 8px;
     cursor: pointer;
+    transition: border-color 0.2s;
 }
 
-.theme-dark .task-card {
-    background: var(--wl-background-secondary);
-    border-color: var(--wl-border-color);
+.task-card:hover {
+    border-color: var(--wl-accent-color);
 }
 
 .checkbox {
-    width: 16px;
-    height: 16px;
-    border: 2px solid #d1d5db;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--wl-text-muted);
     border-radius: 4px;
     flex-shrink: 0;
 }
@@ -223,17 +240,20 @@
 }
 
 .tasks-empty {
-    padding: 12px;
+    padding: 8px;
     color: var(--wl-text-faint);
     font-size: 0.85rem;
+    font-style: italic;
 }
 
-/* === Timeline (本周时间线) === */
+/* === Timeline (Sidebar) === */
 .timeline-container {
     border-top: 1px solid var(--wl-border-color);
     padding-top: 16px;
     cursor: pointer;
 }
+
+.timeline-container:hover .timeline-header { color: var(--wl-accent-color); }
 
 .timeline-header {
     font-size: 0.95rem;
@@ -243,16 +263,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-}
-
-.header-icon {
-    display: flex;
-    align-items: center;
-}
-
-.header-icon svg {
-    width: 18px;
-    height: 18px;
+    transition: color 0.2s;
 }
 
 .timeline-content {
@@ -291,20 +302,14 @@
     padding-left: 8px;
 }
 
-/* 时间线项 - 单行：图标 + 时间 + 描述 */
 .timeline-item {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 6px 8px;
-    background: white;
+    background: var(--wl-background-primary);
     border-radius: 6px;
-    border: 1px solid #f0f0f0;
-}
-
-.theme-dark .timeline-item {
-    background: var(--wl-background-secondary);
-    border-color: var(--wl-border-color);
+    border: 1px solid transparent; /* Align with reference */
 }
 
 .timeline-icon {
@@ -347,247 +352,430 @@
     background: rgba(74, 144, 226, 0.05);
 }
 
-/* 分类图标颜色 */
+/* Category Colors */
 .timeline-category-meeting .timeline-icon svg { stroke: var(--wl-red); }
 .timeline-category-coding .timeline-icon svg { stroke: var(--wl-green); }
 .timeline-category-design .timeline-icon svg { stroke: var(--wl-blue); }
 .timeline-category-reading .timeline-icon svg { stroke: var(--wl-purple); }
 
-/* === Modal Styles === */
-.work-logger-modal .modal-content { user-select: text; }
-
-.stat-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-top: 15px;
-    border: 1px solid var(--wl-border-color);
-    border-radius: var(--wl-radius);
+/* === Modal (Common) === */
+.modal-content.work-logger-dashboard-modal,
+.modal-content.month-timeline-modal {
+    padding: 0;
     overflow: hidden;
-}
-
-.stat-table th, .stat-table td {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--wl-border-color);
-}
-
-.stat-table th {
-    background-color: var(--wl-background-secondary);
-    font-weight: 600;
-    text-align: left;
-}
-
-.stat-table tr:last-child td { border-bottom: none; }
-.stat-total-row { background-color: var(--wl-background-tertiary); font-weight: bold; }
-
-.modal-header-flex {
+    /* Use explicit !important to override default modal sizing constraints */
+    max-width: 98vw !important;
+    width: 98vw !important;
+    height: 95vh !important;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 15px;
+    flex-direction: column;
+    background-color: var(--wl-background-primary);
 }
 
-.modal-actions { display: flex; gap: 10px; }
+.theme-dark .modal-content.work-logger-dashboard-modal,
+.theme-dark .modal-content.month-timeline-modal {
+    background-color: #1A1B1E;
+}
 
-.ai-summary-container {
-    background-color: var(--wl-background-secondary);
-    padding: 20px;
-    border-radius: var(--wl-radius);
-    min-height: 100px;
-    line-height: 1.6;
-    user-select: text;
+/* === Dashboard (Report Modal) Styles === */
+.dashboard-main {
+    flex: 1; display: flex; flex-direction: column; height: 100%;
+    background: #FAFAFA; /* Light grey background for the whole dashboard area */
+}
+
+/* Header */
+.dashboard-header {
+    padding: 20px 40px; 
+    background: var(--wl-background-primary); 
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+    display: flex; justify-content: space-between; align-items: center;
+}
+
+.header-left-group { display: flex; align-items: center; justify-content: space-between; flex-grow: 1; }
+.header-title-group { display: flex; align-items: baseline; gap: 12px; white-space: nowrap; }
+.header-title-text { font-size: 1.5rem; font-weight: 800; color: var(--wl-navy); letter-spacing: -0.5px; }
+.header-range-text { font-size: 1.1rem; font-weight: 700; color: var(--wl-accent-secondary); font-family: monospace; }
+/* RESTORED: Custom range button in header */
+.custom-range-btn {
+    background: transparent;
     border: 1px solid var(--wl-border-color);
-    margin-top: 15px;
-}
-
-.ai-loading {
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
     color: var(--wl-text-muted);
-    display: flex;
+    display: flex !important; /* Force display */
     align-items: center;
     justify-content: center;
-    height: 80px;
-    animation: pulse 2s infinite;
+    transition: all 0.2s;
+    flex-shrink: 0; /* Prevent button from shrinking */
+}
+.custom-range-btn:hover { background: var(--wl-background-secondary); color: var(--wl-navy); }
+
+.dashboard-scroll-area { 
+    flex: 1; overflow-y: auto; padding: 40px; 
+    display: flex; flex-direction: column; gap: 32px;
 }
 
-@keyframes pulse {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
+/* 1. Stat Cards Row */
+.stats-grid { display: flex; gap: 32px; flex-wrap: wrap; align-items: stretch; }
+
+/* Common Card Style */
+.stat-card {
+    background: white; 
+    border-radius: 24px; 
+    padding: 32px; 
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03); 
+    border: 1px solid rgba(0,0,0,0.02);
+    display: flex; flex-direction: column;
 }
 
-/* --- Month Timeline Modal (Optimized) --- */
-.month-timeline-modal {
-    background-color: #F1F3F5; /* 整体略深，让卡片更明显 */
+.theme-dark .stat-card { background: #2C2E33; }
+
+/* Total Hours Card (Left) */
+.total-hours-card { 
+    flex: 0 0 300px; /* Fixed width */
+    align-items: center; 
+    justify-content: center; 
+    text-align: center;
 }
 
-.month-timeline-header {
+.total-hours-card .card-label { 
+    font-size: 0.8rem; 
+    font-weight: 800; 
+    color: #94A3B8; /* Slate 400 */
+    text-transform: uppercase; 
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+}
+
+.total-hours-card .card-value { 
+    font-size: 5.5rem; 
+    font-weight: 900; 
+    color: var(--wl-navy); 
+    line-height: 1;
+    margin: 16px 0;
+    font-family: "Inter", -apple-system, sans-serif;
+}
+
+.theme-dark .total-hours-card .card-value { color: #E2E8F0; }
+
+.total-hours-card .card-sub { 
+    color: #94A3B8; 
+    font-size: 0.9rem; 
+    font-style: italic;
+    font-family: "Georgia", serif; 
+}
+
+/* Distribution Card (Right) */
+.distribution-card {
+    flex: 1;
+    min-width: 400px;
+    padding: 32px 40px;
+}
+
+.dist-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+}
+.dist-title { font-size: 1.1rem; font-weight: 700; color: var(--wl-text-normal); }
+
+.icon-copy-btn { 
+    background: transparent; border: 1px solid var(--wl-border-color); border-radius: 8px; 
+    width: 32px; height: 32px; cursor: pointer; color: var(--wl-text-muted); 
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+}
+.icon-copy-btn:hover { background: var(--wl-background-secondary); color: var(--wl-navy); }
+
+.progress-bar-group { display: flex; flex-direction: column; gap: 20px; }
+.progress-item { display: flex; flex-direction: column; gap: 8px; }
+
+.progress-item .item-info { display: flex; justify-content: space-between; align-items: flex-end; }
+.progress-item .item-name { 
+    font-size: 0.95rem; font-weight: 700; color: var(--wl-text-normal); 
+}
+.progress-item .item-hours { 
+    font-size: 0.9rem; font-weight: 700; color: var(--wl-text-muted); font-family: monospace; 
+}
+
+.bar-bg { height: 10px; background: #F1F5F9; border-radius: 5px; overflow: hidden; width: 100%; }
+.theme-dark .bar-bg { background: rgba(255,255,255,0.1); }
+
+.bar-fill { height: 100%; border-radius: 5px; transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+/* Bar Colors */
+.bg-indigo { background-color: #192A56; }
+.bg-emerald { background-color: #FF6B6B; } /* Using Accent Secondary (Red/Coral) */
+.bg-blue { background-color: #4A90E2; }
+.bg-amber { background-color: #FFD166; }
+.bg-purple { background-color: #A855F7; }
+
+/* 2. AI Section */
+.ai-section { 
+    background: white; 
+    border-radius: 24px; 
+    padding: 32px; 
+    border: none;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03); 
+    display: flex; flex-direction: column; gap: 20px;
+}
+.theme-dark .ai-section { background: #2C2E33; }
+
+/* AI Controls (Mode Switcher) */
+.ai-controls-row { display: flex; gap: 8px; margin-bottom: 0; }
+.mode-switcher-icons { display: flex; gap: 8px; }
+
+.mode-icon-btn { 
+    width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--wl-border-color); 
+    cursor: pointer; color: var(--wl-text-muted); background: white;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+}
+.mode-icon-btn:hover { border-color: var(--wl-navy); color: var(--wl-navy); transform: translateY(-1px); }
+.mode-icon-btn.active { background: var(--wl-navy); color: white; border-color: var(--wl-navy); box-shadow: 0 4px 10px rgba(25, 42, 86, 0.2); }
+.theme-dark .mode-icon-btn { background: #343A40; border-color: #495057; }
+
+/* AI Input Area */
+.ai-input-row { display: flex; gap: 24px; height: 160px; }
+
+.textarea-wrapper { flex: 1; position: relative; height: 100%; }
+.zap-icon { position: absolute; top: 16px; left: 16px; color: var(--wl-yellow); z-index: 2; pointer-events: none; }
+
+.ai-prompt-input { 
+    width: 100%; height: 100% !important; 
+    background: #F8FAFC; /* Very light blue-grey */
+    border: none;
+    border-radius: 16px; padding: 16px 16px 16px 44px; /* Left padding for icon */
+    resize: none; 
+    font-family: "Inter", sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--wl-text-normal);
+    transition: all 0.2s;
+}
+.ai-prompt-input:focus { 
+    background: white; 
+    box-shadow: 0 0 0 2px var(--wl-navy), 0 8px 20px rgba(0,0,0,0.05); 
+}
+.theme-dark .ai-prompt-input { background: #1A1B1E; }
+
+.start-gen-btn { 
+    width: 160px; height: 100%;
+    background: white; 
+    color: var(--wl-text-normal); 
+    border: 1px solid var(--wl-border-color);
+    border-radius: 16px; 
+    cursor: pointer; 
+    font-weight: 700;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+.start-gen-btn .btn-icon svg { width: 24px; height: 24px; }
+.start-gen-btn:hover { 
+    border-color: var(--wl-navy); color: var(--wl-navy);
+    transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+/* AI Results */
+.ai-result-area { margin-top: 0; }
+.ai-loading-box { padding: 40px; }
+.spinner { color: var(--wl-navy); width: 24px; height: 24px; }
+
+.ai-result-card { 
+    background: #F8FAFC; 
+    border: 1px solid #E2E8F0; 
+    border-radius: 16px; 
+    padding: 32px; 
+}
+.theme-dark .ai-result-card { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.1); }
+
+.result-header { margin-bottom: 24px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 16px; }
+.result-label { font-size: 0.8rem; font-weight: 800; color: var(--wl-navy); letter-spacing: 1px; text-transform: uppercase; }
+
+/* Folding for Markdown */
+.wl-collapsible-header { cursor: pointer; display: flex; align-items: center; user-select: none; }
+.wl-collapse-indicator { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin-right: 4px; color: var(--wl-text-muted); transition: transform 0.2s; }
+.wl-collapsible-header:hover .wl-collapse-indicator { color: var(--wl-navy); }
+.wl-hidden { display: none !important; }
+
+/* === Month Timeline Modal (Card Style from Reference) === */
+.month-timeline-modal .month-timeline-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0 25px 0;
+    padding: 20px 32px;
+    background-color: var(--wl-background-secondary);
+    border-bottom: 1px solid var(--wl-border-color);
 }
 
 .month-timeline-header h2 {
     margin: 0;
-    font-size: 2.2rem; /* 极大标题 */
-    font-weight: 900;
-    color: #192A56; /* 深海军蓝 */
-    letter-spacing: -1px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--wl-navy);
 }
 
 .month-nav-btn {
     background: white;
     border: 1px solid var(--wl-border-color);
-    border-radius: 12px;
-    padding: 10px;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.month-nav-btn:hover {
-    background: var(--wl-accent-color);
-    color: white;
-    border-color: var(--wl-accent-color);
+.month-timeline-weeks {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    background-color: var(--wl-background-secondary);
+    /* Fix: Ensure it takes full width */
+    width: 100%;
 }
+
+.theme-dark .month-timeline-weeks { background-color: #25262b; }
 
 .month-timeline-table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 12px; /* 增加列间距，形成卡片感 */
+    border-spacing: 12px;
     table-layout: fixed;
-    margin: -12px; /* 抵消外层间距 */
 }
 
-.month-timeline-table th {
-    background-color: #192A56; /* 深海军蓝表头 */
+.month-week-header-cell {
+    background-color: var(--wl-navy);
     color: white;
-    padding: 14px;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    font-weight: 700;
+    padding: 10px;
+    border-radius: 8px;
     text-align: center;
-    box-shadow: 0 4px 10px rgba(25, 42, 86, 0.2);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.month-timeline-table th .week-label {
-    display: block;
-    font-size: 1rem;
-    margin-bottom: 2px;
-}
-
-.month-timeline-table th .week-range {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 400;
-    opacity: 0.8;
-}
-
-.month-timeline-table td.weekday-label {
-    background-color: transparent;
-    color: #192A56;
-    font-weight: 900;
+.month-weekday-side-cell {
     text-align: center;
-    font-size: 1.1rem;
-    width: 60px;
-    vertical-align: middle;
+    font-weight: 800;
+    color: var(--wl-navy);
+    font-size: 0.85rem;
+    width: 40px !important; /* Force match colgroup */
+    white-space: nowrap;
+    padding: 0 4px !important;
 }
 
-/* 卡片式日单元格 */
+.month-weekday-corner-cell {
+    width: 40px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
 .month-day-cell {
-    background-color: white;
-    border-radius: 16px;
-    padding: 52px 12px 12px 12px; /* 顶部预留日期空间 */
+    background-color: var(--wl-background-primary);
+    border-radius: 12px;
+    padding: 40px 8px 45px 8px; /* Extra bottom padding for EOD item */
     min-height: 120px;
     vertical-align: top;
     position: relative;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border: 1px solid rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.05);
+    overflow: hidden; /* Ensure absolute children don't overflow border-radius */
 }
 
-.month-day-cell:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+.month-day-cell .timeline-item.timeline-item-end {
+    position: absolute !important;
+    bottom: 8px !important;
+    right: 12px !important;
+    width: auto !important; /* Let content decide width */
+    background-color: transparent !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    border: none !important;
+    box-sizing: border-box !important;
 }
 
-.month-day-cell.clickable {
-    cursor: pointer;
+.theme-dark .month-day-cell .timeline-item.timeline-item-end {
+    background-color: transparent !important;
 }
+
+
+
+.timeline-item.timeline-item-end .timeline-time {
+    color: #94A3B8;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+.timeline-item.timeline-item-end .timeline-icon svg {
+    width: 14px;
+    height: 14px;
+    stroke: #94A3B8;
+    stroke-width: 2px;
+}
+
+.month-day-cell.clickable { cursor: pointer; }
 
 .month-day-cell.empty-cell {
-    background-color: rgba(0,0,0,0.02);
+    background-color: transparent;
     box-shadow: none;
     border: 1px dashed var(--wl-border-color);
 }
 
-/* 日期标签 - 视觉中心 */
 .month-day-cell .date-label {
     position: absolute;
-    top: 12px;
-    left: 15px;
-    font-size: 1.3rem; /* 醒目日期 */
-    font-weight: 900;
-    color: #192A56;
-    font-family: "Inter", sans-serif;
+    top: 8px;
+    left: 10px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--wl-navy);
+    opacity: 0.8;
 }
 
-.month-day-cell .date-label.today {
-    color: var(--wl-accent-secondary); /* 今日使用珊瑚橙 */
-}
+.month-day-cell .date-label.today { color: var(--wl-accent-secondary); opacity: 1; }
 
 .month-day-cell .date-label::after {
     content: '';
     display: block;
-    width: 20px;
+    width: 16px;
     height: 3px;
     background: var(--wl-accent-secondary);
     margin-top: 2px;
     border-radius: 2px;
+    opacity: 0.5;
 }
 
-/* 时间线列表项 */
-.month-day-cell .timeline-item {
+/* === Global Modal Fixes (Force Full Width) === */
+/* This is crucial to override Obsidian's default modal styles */
+.modal-container:has(.work-logger-dashboard-modal),
+.modal-container:has(.month-timeline-modal) {
+    padding: 0 !important;
+}
+
+.modal-container .modal.work-logger-dashboard-modal,
+.modal-container .modal.month-timeline-modal {
+    max-width: 98vw !important;
+    width: 98vw !important;
+    height: 95vh !important;
+    max-height: 95vh !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 20px;
+    background-color: var(--wl-background-primary);
+}
+
+/* Ensure content takes full space */
+.modal-content.work-logger-dashboard-modal,
+.modal-content.month-timeline-modal {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
     display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 6px;
-    padding: 4px 0;
-}
-
-.month-day-cell .timeline-icon svg {
-    width: 20px; /* 更大的图标 */
-    height: 20px;
-    stroke: var(--wl-accent-secondary); /* 使用珊瑚橙 */
-    stroke-width: 2.5;
-}
-
-.month-day-cell .timeline-time {
-    font-size: 0.75rem;
-    color: #ADB5BD; /* 浅灰色时间 */
-    font-weight: 400;
-    min-width: 38px;
-}
-
-.month-day-cell .timeline-content-text {
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: #343A40; /* 深灰色正文 */
-    line-height: 1.3;
-}
-
-/* 状态颜色覆盖 */
-.month-day-cell .timeline-item.timeline-category-meeting .timeline-icon svg { stroke: var(--wl-red); }
-.month-day-cell .timeline-item.timeline-category-coding .timeline-icon svg { stroke: var(--wl-cyan); }
-.month-day-cell .timeline-item.timeline-category-design .timeline-icon svg { stroke: #4A90E2; }
-
-/* 响应式调整 */
-.theme-dark .month-day-cell {
-    background-color: #2C2E33;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-.theme-dark .month-day-cell .date-label {
-    color: white;
-}
-
-.theme-dark .month-timeline-table th {
-    background-color: #1A1B1E;
+    flex-direction: column;
 }

@@ -1,10 +1,13 @@
 import { moment } from "obsidian";
 import { en } from "./en";
 import { zh } from "./zh";
+import { zh_tw } from "./zh-tw";
 
 const translations: Record<string, Record<string, string>> = {
     en,
     zh,
+    'zh-tw': zh_tw,
+    'zh-hk': zh_tw,
 };
 
 // 获取 Obsidian当前的语言设置

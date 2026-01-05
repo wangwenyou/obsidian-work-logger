@@ -4,10 +4,14 @@ export const en: Record<string, string> = {
 
     // calendar view
     'viewTitle': 'Work logger',
+    'yearSummaryTitle': '{{year}} Year-End Summary',
+    'yearSummaryTooltip': 'Generate year-end summary report',
     'prevMonth': 'Previous month',
     'nextMonth': 'Next month',
     'dateFormat': 'MMMM YYYY',
     'weekStatTooltip': 'Generate weekly report',
+    'today': 'Today',
+    'dateDayFormat': 'DD',
 
     // daily note
     'dailyNoteTemplate': `### Todos
@@ -20,21 +24,27 @@ export const en: Record<string, string> = {
 ### Daily Summary
 `,
 
-    // report modal
-    'reportTitle': 'Weekly work report',
-    'aiTitle': 'Generate with AI',
-    'copyTooltip': 'Copy table to clipboard',
-    'taskContent': 'Task',
-    'durationHours': 'Hours',
-    'durationDays': 'Man-days',
-    'total': 'Total',
-    'noData': 'No timed tasks were parsed for this week',
-    'copySuccess': 'Copied to clipboard',
-
-    // AI
-    'aiClickToStart': 'Click the ✨ icon above to start generating...',
+    'reportTitle': 'Work Dashboard',
+    'totalHours': 'Total Hours',
+    'periodTotal': 'Period Total',
+    'distributionTitle': 'Time Distribution',
+    'copyStats': 'Copy Statistics',
+    'aiReportGen': 'AI Report Generator',
+    'aiCustomTitle': 'Custom',
+    'aiCustomPrompt': 'Deep analysis based on logs... Examples: How many leaves did I take this year? How many design reviews did I attend?',
+    'startGenerate': 'Start Generate',
+    'generatedDraft': 'AI Generated Draft',
+    'copyReport': 'Copy Report',
+    'lastSync': 'Last Sync',
     'aiApiKeyMissing': 'AI API Key is not configured, please set it in the settings',
     'aiNoContent': 'No weekly report content found for analysis',
+    'aiMonthPrompt': `You are a professional management consultant. Based on the following month's logs, summarize key outputs, time distribution, and work trends, then provide improvement suggestions.
+Requirements:
+1. Professional and concise.
+2. Output in Markdown format.
+Here is the monthly log data:
+`,
+    'aiYearNoContent': 'No work records found for this year.',
     'aiLoading': 'AI summary is generating, please wait...',
     'aiError': 'AI generation failed: ',
     'aiPrompt': `You are a professional weekly report assistant. Based on the following week's work log content (including daily task records and possible daily summaries), please generate a concise weekly work summary for me.
@@ -45,6 +55,32 @@ Requirements:
 4. Output the content directly in Markdown format.
 
 Here is the raw log data for this week:
+`,
+    'aiYearPrompt': `Role: Senior Technical Architect, Data Analysis Expert, and OKR Management Expert.
+
+Task: Based on the provided {{year}} annual work logs (see below), conduct a deep analysis and generate a professional, quantified year-end summary report following OKR standards.
+
+Process:
+
+ 1. Clustering & Quantization (Data Mining):
+     * Cluster fragmented work into 4-5 core strategic areas (e.g., Core Architecture Evolution, Business Delivery, System Stability).
+     * Extract key quantitative data: number of design reviews, projects/clients supported, major bugs fixed, training sessions organized, new technologies researched.
+
+ 2. OKR Formatting (Output):
+     * Generate corresponding Objectives and Key Results for each cluster.
+     * Objective: Qualitative, describing core value, using leading verbs (e.g., "Driving...", "Leading...").
+     * Key Results: Quantitative, must include numerical changes (from X to Y) or specific output counts, emphasizing results over process.
+
+ 3. Impact & Growth Evaluation:
+     * Summarize technical depth (e.g., RAG, Agentic architecture).
+     * Summarize team influence (cross-team collaboration, sharing, training).
+
+Output Requirements:
+ * Markdown format.
+ * Language style: Professional, concise, result-oriented. Use action verbs like "Achieved", "Led", "Optimized", "Delivered".
+ * Note: If a specific project took a significant amount of time, describe it as a major KR.
+
+Annual Log Data:
 `,
 
     // settings
@@ -68,7 +104,13 @@ Here is the raw log data for this week:
     'modelNameDesc': 'The specific model to use, e.g., gpt-4, gemini-2.5-flash.',
     'prompt': 'System prompt',
     'promptDesc': 'The instruction sent to the AI to guide how it generates the weekly report.',
+    'weekLabel': 'Week {{n}}',
+    'weekReport': 'Weekly',
+    'monthReport': 'Monthly',
+    'yearReport': 'Annual',
+    'weekdaysLong': 'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
     'weekdaysShort': 'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
+    'noDayData': 'No records',
     'monthTasksTitle': 'Todos this month',
     'noIncompleteTasks': 'No incomplete tasks this month!',
     'timelineTitle': 'Timeline',
