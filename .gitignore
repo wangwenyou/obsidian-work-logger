@@ -12,3 +12,10 @@ build/
 # OS-specific
 .DS_Store
 Thumbs.db
+
+# Local configuration
+dev.config.json
+*.png
+*.bak
+*.png
+*.bak

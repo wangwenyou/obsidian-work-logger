@@ -4,7 +4,8 @@
     --wl-accent-color: #4A90E2;
     --wl-accent-color-rgb: 74, 144, 226;
     --wl-text-on-accent: #ffffff;
-    --wl-background-primary: #ffffff; /* Default Obsidian light is usually white */
+    --wl-background-primary: #ffffff;
+    /* Default Obsidian light is usually white */
     --wl-background-secondary: #f8f9fa;
     --wl-background-tertiary: #e9ecef;
     --wl-border-color: #ced4da;
@@ -14,9 +15,61 @@
     --wl-radius: 12px;
     --wl-radius-small: 8px;
     --wl-spacing: 24px;
-    --wl-transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* Category Colors */
+.wl-category-row {
+    border-bottom: 1px solid var(--background-modifier-border);
+    padding: 8px 0;
+}
+
+.wl-category-row .setting-item-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.wl-cat-icon-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--background-secondary);
+    border-radius: 4px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.wl-cat-icon-preview svg {
+    width: 18px;
+    height: 18px;
+}
+
+.wl-category-row input[type="text"] {
+    flex: 1;
+}
+
+.wl-category-row input[type="text"]:nth-child(1) {
+    max-width: 100px; /* Name */
+}
+
+.wl-category-row input[type="text"]:nth-child(2) {
+    max-width: 80px; /* Icon */
+}
+
+.wl-category-row .setting-item-control input[type="color"] {
+    width: 40px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.wl-category-row input[type="text"]:nth-child(4) {
+    flex: 2; /* Patterns */
+}
+
+/* Category Colors */
     --wl-accent-secondary: #FF6B6B;
     --wl-accent-cyan: #00A896;
     --wl-red: #FF6B6B;
@@ -24,7 +77,7 @@
     --wl-blue: #4A90E2;
     --wl-purple: #A855F7;
     --wl-yellow: #FFD93D;
-    
+
     /* Legacy/Dashboard specific (Preserved) */
     --wl-navy: #192A56;
     --wl-primary-color: #4a90e2;
@@ -44,9 +97,9 @@
     --wl-text-muted: #999;
     --wl-text-faint: #6C757D;
     --wl-accent-secondary: #FF6B6B;
-    
+
     /* Legacy/Dashboard specific */
-    --wl-navy: #A5B4FC; 
+    --wl-navy: #A5B4FC;
 }
 
 /* === Main Container === */
@@ -94,7 +147,8 @@
 
 .calendar-grid {
     display: grid;
-    grid-template-columns: 40px repeat(7, 1fr); /* 8 columns: 1 for button, 7 for days */
+    grid-template-columns: 40px repeat(7, 1fr);
+    /* 8 columns: 1 for button, 7 for days */
     gap: 4px;
     text-align: center;
     align-items: center;
@@ -102,22 +156,60 @@
 }
 
 .day-header {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+    /* 稍微加大一点让它更平衡 */
     color: var(--wl-text-muted);
     padding-bottom: 8px;
     font-weight: 600;
+    text-align: center;
+    /* 强制居中 */
+    display: flex;
+    /* 使用 flex 居中 */
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0 0 8px 0;
 }
 
 .day-cell {
-    position: relative;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    padding: 6px;
     cursor: pointer;
-    padding: 6px 0;
+    transition: all 0.2s;
     display: flex;
+    /* 改为 flex 布局 */
     flex-direction: column;
+    position: relative;
+    border: 1px solid transparent;
+    height: 100%;
+    /* 确保填满网格单元 */
+    min-height: 0;
+    /* 防止溢出 */
+    justify-content: center;
+    /* 改为居中对齐，让内容垂直居中 */
     align-items: center;
-    gap: 3px;
-    border-radius: var(--wl-radius-small);
-    transition: background-color 0.2s;
+    gap: 4px;
+    /* 增加一点间距 */
+}
+
+/* 确保数字在上，圆点在下 */
+.day-cell .day-number {
+    order: 1;
+    margin-bottom: 2px;
+}
+
+.day-cell .holiday-badge {
+    order: 0;
+    /* 徽章在最上面（如果是绝对定位则忽略） */
+}
+
+/* 实际上 holiday-badge 是 absolute 的，不需要 order */
+
+.day-cell .event-mark {
+    order: 2;
+    /* 圆点在最下面 */
+    margin-top: 2px;
 }
 
 .day-cell:hover {
@@ -143,7 +235,9 @@
     font-weight: 700;
 }
 
-.day-cell.other-month { opacity: 0.3; }
+.day-cell.other-month {
+    opacity: 0.3;
+}
 
 /* The missing indicator! */
 .event-mark {
@@ -253,7 +347,9 @@
     cursor: pointer;
 }
 
-.timeline-container:hover .timeline-header { color: var(--wl-accent-color); }
+.timeline-container:hover .timeline-header {
+    color: var(--wl-accent-color);
+}
 
 .timeline-header {
     font-size: 0.95rem;
@@ -309,7 +405,8 @@
     padding: 6px 8px;
     background: var(--wl-background-primary);
     border-radius: 6px;
-    border: 1px solid transparent; /* Align with reference */
+    border: 1px solid transparent;
+    /* Align with reference */
 }
 
 .timeline-icon {
@@ -332,13 +429,30 @@
     flex-shrink: 0;
 }
 
+.timeline-text-group {
+    flex: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    overflow: hidden;
+}
+
 .timeline-content-text {
     font-size: 0.8rem;
+    font-weight: 700;
     color: var(--wl-text-normal);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.timeline-description-text {
+    font-size: 0.75rem;
+    color: var(--wl-text-muted);
     flex: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-weight: normal;
 }
 
 .timeline-duration {
@@ -353,10 +467,21 @@
 }
 
 /* Category Colors */
-.timeline-category-meeting .timeline-icon svg { stroke: var(--wl-red); }
-.timeline-category-coding .timeline-icon svg { stroke: var(--wl-green); }
-.timeline-category-design .timeline-icon svg { stroke: var(--wl-blue); }
-.timeline-category-reading .timeline-icon svg { stroke: var(--wl-purple); }
+.timeline-category-meeting .timeline-icon svg {
+    stroke: var(--wl-red);
+}
+
+.timeline-category-coding .timeline-icon svg {
+    stroke: var(--wl-green);
+}
+
+.timeline-category-design .timeline-icon svg {
+    stroke: var(--wl-blue);
+}
+
+.timeline-category-reading .timeline-icon svg {
+    stroke: var(--wl-purple);
+}
 
 /* === Modal (Common) === */
 .modal-content.work-logger-dashboard-modal,
@@ -380,93 +505,326 @@
 }
 
 /* === Dashboard (Report Modal) Styles === */
-.dashboard-main {
-    flex: 1; display: flex; flex-direction: column; height: 100%;
-    background: #FAFAFA; /* Light grey background for the whole dashboard area */
-}
+/* 移除了 redundant .dashboard-main */
 
 /* Header */
 .dashboard-header {
-    padding: 20px 40px; 
-    background: var(--wl-background-primary); 
-    border-bottom: 1px solid rgba(0,0,0,0.03);
-    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 32px;
+    /* 稍微减小 padding，让布局更紧凑 */
+    background: var(--wl-background-primary);
+    border-bottom: 1px solid var(--wl-border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.header-left-group { display: flex; align-items: center; justify-content: space-between; flex-grow: 1; }
-.header-title-group { display: flex; align-items: baseline; gap: 12px; white-space: nowrap; }
-.header-title-text { font-size: 1.5rem; font-weight: 800; color: var(--wl-navy); letter-spacing: -0.5px; }
-.header-range-text { font-size: 1.1rem; font-weight: 700; color: var(--wl-accent-secondary); font-family: monospace; }
-/* RESTORED: Custom range button in header */
-.custom-range-btn {
-    background: transparent;
+.header-title-group {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    white-space: nowrap;
+}
+
+.header-title-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--wl-navy);
+    letter-spacing: -0.5px;
+}
+
+.header-range-wrapper {
+    position: relative;
+    display: flex;
+}
+
+.header-range-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 4px 12px;
+    border-radius: 6px;
+    background: var(--wl-background-primary);
     border: 1px solid var(--wl-border-color);
-    border-radius: 8px;
-    width: 32px;
-    height: 32px;
+    transition: all 0.2s;
+}
+
+.header-range-container:hover {
+    background: var(--wl-background-secondary);
+    border-color: var(--wl-accent-color);
+}
+
+.header-range-text.clickable {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--wl-text-normal);
+}
+
+.dropdown-icon {
+    display: flex;
+    align-items: center;
+    color: var(--wl-text-muted);
+    margin-left: 2px;
+}
+
+.dropdown-icon svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* Inline Date Picker Dropdown */
+.inline-date-picker {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: var(--wl-background-primary);
+    border: 1px solid var(--wl-border-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    padding: 16px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 420px;
+    /* 大幅加宽确保不溢出 */
+}
+
+.inline-date-picker.hidden {
+    display: none;
+}
+
+.picker-shortcuts {
+    display: flex;
+    gap: 8px;
+}
+
+.picker-shortcuts .shortcut-btn {
+    flex: 1;
+    font-size: 0.75rem;
+    padding: 6px 0;
+    border: 1px solid var(--wl-border-color);
+    background: var(--wl-background-primary);
+    border-radius: 6px;
     cursor: pointer;
     color: var(--wl-text-muted);
-    display: flex !important; /* Force display */
-    align-items: center;
-    justify-content: center;
     transition: all 0.2s;
-    flex-shrink: 0; /* Prevent button from shrinking */
-}
-.custom-range-btn:hover { background: var(--wl-background-secondary); color: var(--wl-navy); }
-
-.dashboard-scroll-area { 
-    flex: 1; overflow-y: auto; padding: 40px; 
-    display: flex; flex-direction: column; gap: 32px;
 }
 
-/* 1. Stat Cards Row */
-.stats-grid { display: flex; gap: 32px; flex-wrap: wrap; align-items: stretch; }
-
-/* Common Card Style */
-.stat-card {
-    background: white; 
-    border-radius: 24px; 
-    padding: 32px; 
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03); 
-    border: 1px solid rgba(0,0,0,0.02);
-    display: flex; flex-direction: column;
+.picker-shortcuts .shortcut-btn:hover {
+    background: var(--wl-background-secondary);
+    color: var(--wl-accent-color);
+    border-color: var(--wl-accent-color);
 }
 
-.theme-dark .stat-card { background: #2C2E33; }
+.picker-custom {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    /* 增加间距 */
+    padding-top: 12px;
+    border-top: 1px solid var(--wl-border-color);
+    justify-content: center;
+    /* 居中分布 */
+}
 
-/* Total Hours Card (Left) */
-.total-hours-card { 
-    flex: 0 0 300px; /* Fixed width */
-    align-items: center; 
-    justify-content: center; 
+.picker-custom .date-input {
+    width: 155px;
+    /* 进一步增大宽度，彻底解决日期截断问题 */
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    border: 1px solid var(--wl-border-color);
+    background: var(--wl-background-secondary);
+    border-radius: 6px;
     text-align: center;
 }
 
-.total-hours-card .card-label { 
-    font-size: 0.8rem; 
-    font-weight: 800; 
-    color: #94A3B8; /* Slate 400 */
-    text-transform: uppercase; 
-    letter-spacing: 0.15em;
-    margin-bottom: 8px;
+.picker-custom .range-sep {
+    color: var(--wl-text-muted);
+    font-size: 0.7rem;
 }
 
-.total-hours-card .card-value { 
-    font-size: 5.5rem; 
-    font-weight: 900; 
-    color: var(--wl-navy); 
-    line-height: 1;
-    margin: 16px 0;
-    font-family: "Inter", -apple-system, sans-serif;
+.picker-custom .apply-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--wl-accent-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s, transform 0.1s;
 }
 
-.theme-dark .total-hours-card .card-value { color: #E2E8F0; }
+.picker-custom .apply-btn:hover {
+    background: var(--wl-accent-secondary);
+}
 
-.total-hours-card .card-sub { 
-    color: #94A3B8; 
-    font-size: 0.9rem; 
-    font-style: italic;
-    font-family: "Georgia", serif; 
+.picker-custom .apply-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 3px;
+    /* 加粗图标线条 */
+}
+
+.picker-custom .apply-btn:active {
+    transform: scale(0.95);
+}
+
+.dashboard-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    /* 从 32px 减小到 24px，收紧布局 */
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background: var(--wl-background-secondary);
+}
+
+.theme-dark .dashboard-scroll-area {
+    background: var(--wl-background-primary);
+}
+
+/* 1. Stat Cards Row */
+.stats-grid {
+    display: flex;
+    gap: 24px;
+    flex-wrap: nowrap;
+    /* 核心修复：看板模式下强制尝试水平布排 */
+    align-items: stretch;
+    width: 100%;
+}
+
+/* Common Card Style - Ultra Lean */
+.stat-card {
+    background: var(--wl-background-primary);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: none;
+    border: 1px solid var(--wl-border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.theme-dark .stat-card {
+    background: var(--wl-background-primary);
+}
+
+/* Total Hours Card (Left) */
+.total-hours-card {
+    flex: 0 0 280px;
+    padding: 24px 20px;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.total-card-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--wl-border-color);
+    padding-bottom: 16px;
+    margin-bottom: 4px;
+}
+
+.total-hours-card .card-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: var(--wl-text-muted);
+}
+
+.total-hours-card .card-value {
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: var(--wl-navy);
+    line-height: 1.1;
+    margin: 8px 0;
+}
+
+/* Category Summary List */
+.category-summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.cat-summary-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 6px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.cat-summary-item.clickable {
+    cursor: pointer;
+}
+
+.cat-summary-item.clickable:hover {
+    background: var(--background-modifier-hover);
+}
+
+.cat-summary-item.is-active {
+    background: var(--background-modifier-selected);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.cat-icon-mini {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: var(--wl-background-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--wl-navy);
+    flex-shrink: 0;
+}
+
+.cat-icon-mini svg {
+    width: 16px;
+    height: 16px;
+}
+
+.cat-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.cat-info .cat-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--wl-text-normal);
+}
+
+.cat-value-group {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    justify-content: flex-end;
+}
+
+.cat-hours {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--wl-text-normal);
+    font-family: monospace;
+}
+
+.cat-percent {
+    font-size: 0.75rem;
+    color: var(--wl-text-muted);
+    font-weight: normal;
 }
 
 /* Distribution Card (Right) */
@@ -477,129 +835,336 @@
 }
 
 .dist-header {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
 }
-.dist-title { font-size: 1.1rem; font-weight: 700; color: var(--wl-text-normal); }
 
-.icon-copy-btn { 
-    background: transparent; border: 1px solid var(--wl-border-color); border-radius: 8px; 
-    width: 32px; height: 32px; cursor: pointer; color: var(--wl-text-muted); 
-    display: flex; align-items: center; justify-content: center;
+.dist-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--wl-text-normal);
+}
+
+.icon-copy-btn {
+    background: transparent;
+    border: 1px solid var(--wl-border-color);
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    color: var(--wl-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.2s;
 }
-.icon-copy-btn:hover { background: var(--wl-background-secondary); color: var(--wl-navy); }
 
-.progress-bar-group { display: flex; flex-direction: column; gap: 20px; }
-.progress-item { display: flex; flex-direction: column; gap: 8px; }
-
-.progress-item .item-info { display: flex; justify-content: space-between; align-items: flex-end; }
-.progress-item .item-name { 
-    font-size: 0.95rem; font-weight: 700; color: var(--wl-text-normal); 
-}
-.progress-item .item-hours { 
-    font-size: 0.9rem; font-weight: 700; color: var(--wl-text-muted); font-family: monospace; 
+.icon-copy-btn:hover {
+    background: var(--wl-background-secondary);
+    color: var(--wl-navy);
 }
 
-.bar-bg { height: 10px; background: #F1F5F9; border-radius: 5px; overflow: hidden; width: 100%; }
-.theme-dark .bar-bg { background: rgba(255,255,255,0.1); }
+.progress-bar-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
-.bar-fill { height: 100%; border-radius: 5px; transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.progress-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.progress-item.clickable-task {
+    cursor: pointer;
+    padding: 4px;
+    margin: -4px;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.progress-item.clickable-task:hover {
+    background: var(--background-modifier-hover);
+}
+
+.progress-item .item-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.progress-item .item-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--wl-text-normal);
+}
+
+.progress-item .item-hours {
+    font-size: 0.9rem;
+    font-family: monospace;
+    display: flex;
+    gap: 4px;
+}
+
+.hours-value {
+    font-weight: 700;
+    color: var(--wl-text-normal);
+}
+
+.percentage-value {
+    color: var(--wl-text-muted);
+    font-size: 0.85em;
+    font-weight: normal;
+}
+
+.bar-bg {
+    height: 10px;
+    background: #F1F5F9;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.theme-dark .bar-bg {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
 
 /* Bar Colors */
-.bg-indigo { background-color: #192A56; }
-.bg-emerald { background-color: #FF6B6B; } /* Using Accent Secondary (Red/Coral) */
-.bg-blue { background-color: #4A90E2; }
-.bg-amber { background-color: #FFD166; }
-.bg-purple { background-color: #A855F7; }
+.bg-indigo {
+    background-color: #192A56;
+}
+
+.bg-emerald {
+    background-color: #FF6B6B;
+}
+
+/* Using Accent Secondary (Red/Coral) */
+.bg-blue {
+    background-color: #4A90E2;
+}
+
+.bg-amber {
+    background-color: #FFD166;
+}
+
+.bg-purple {
+    background-color: #A855F7;
+}
 
 /* 2. AI Section */
-.ai-section { 
-    background: white; 
-    border-radius: 24px; 
-    padding: 32px; 
+.ai-section {
+    background: white;
+    border-radius: 24px;
+    padding: 32px;
     border: none;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03); 
-    display: flex; flex-direction: column; gap: 20px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
-.theme-dark .ai-section { background: #2C2E33; }
+
+.theme-dark .ai-section {
+    background: #2C2E33;
+}
 
 /* AI Controls (Mode Switcher) */
-.ai-controls-row { display: flex; gap: 8px; margin-bottom: 0; }
-.mode-switcher-icons { display: flex; gap: 8px; }
+.ai-controls-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 0;
+}
 
-.mode-icon-btn { 
-    width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--wl-border-color); 
-    cursor: pointer; color: var(--wl-text-muted); background: white;
-    display: flex; align-items: center; justify-content: center;
+.mode-switcher-icons {
+    display: flex;
+    gap: 8px;
+}
+
+.mode-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--wl-border-color);
+    cursor: pointer;
+    color: var(--wl-text-muted);
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: all 0.2s;
 }
-.mode-icon-btn:hover { border-color: var(--wl-navy); color: var(--wl-navy); transform: translateY(-1px); }
-.mode-icon-btn.active { background: var(--wl-navy); color: white; border-color: var(--wl-navy); box-shadow: 0 4px 10px rgba(25, 42, 86, 0.2); }
-.theme-dark .mode-icon-btn { background: #343A40; border-color: #495057; }
+
+.mode-icon-btn:hover {
+    border-color: var(--wl-navy);
+    color: var(--wl-navy);
+    transform: translateY(-1px);
+}
+
+.mode-icon-btn.active {
+    background: var(--wl-navy);
+    color: white;
+    border-color: var(--wl-navy);
+    box-shadow: 0 4px 10px rgba(25, 42, 86, 0.2);
+}
+
+.theme-dark .mode-icon-btn {
+    background: #343A40;
+    border-color: #495057;
+}
 
 /* AI Input Area */
-.ai-input-row { display: flex; gap: 24px; height: 160px; }
+.ai-input-row {
+    display: flex;
+    gap: 24px;
+    height: 160px;
+}
 
-.textarea-wrapper { flex: 1; position: relative; height: 100%; }
-.zap-icon { position: absolute; top: 16px; left: 16px; color: var(--wl-yellow); z-index: 2; pointer-events: none; }
+.textarea-wrapper {
+    flex: 1;
+    position: relative;
+    height: 100%;
+}
 
-.ai-prompt-input { 
-    width: 100%; height: 100% !important; 
-    background: #F8FAFC; /* Very light blue-grey */
+.zap-icon {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    color: var(--wl-yellow);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.ai-prompt-input {
+    width: 100%;
+    height: 100% !important;
+    background: #F8FAFC;
+    /* Very light blue-grey */
     border: none;
-    border-radius: 16px; padding: 16px 16px 16px 44px; /* Left padding for icon */
-    resize: none; 
+    border-radius: 16px;
+    padding: 16px 16px 16px 44px;
+    /* Left padding for icon */
+    resize: none;
     font-family: "Inter", sans-serif;
     font-size: 0.95rem;
     line-height: 1.6;
     color: var(--wl-text-normal);
     transition: all 0.2s;
 }
-.ai-prompt-input:focus { 
-    background: white; 
-    box-shadow: 0 0 0 2px var(--wl-navy), 0 8px 20px rgba(0,0,0,0.05); 
-}
-.theme-dark .ai-prompt-input { background: #1A1B1E; }
 
-.start-gen-btn { 
-    width: 160px; height: 100%;
-    background: white; 
-    color: var(--wl-text-normal); 
-    border: 1px solid var(--wl-border-color);
-    border-radius: 16px; 
-    cursor: pointer; 
-    font-weight: 700;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
-    transition: all 0.2s;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+.ai-prompt-input:focus {
+    background: white;
+    box-shadow: 0 0 0 2px var(--wl-navy), 0 8px 20px rgba(0, 0, 0, 0.05);
 }
-.start-gen-btn .btn-icon svg { width: 24px; height: 24px; }
-.start-gen-btn:hover { 
-    border-color: var(--wl-navy); color: var(--wl-navy);
-    transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+
+.theme-dark .ai-prompt-input {
+    background: #1A1B1E;
+}
+
+.start-gen-btn {
+    width: 160px;
+    height: 100%;
+    background: white;
+    color: var(--wl-text-normal);
+    border: 1px solid var(--wl-border-color);
+    border-radius: 16px;
+    cursor: pointer;
+    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+}
+
+.start-gen-btn .btn-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.start-gen-btn:hover {
+    border-color: var(--wl-navy);
+    color: var(--wl-navy);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
 }
 
 /* AI Results */
-.ai-result-area { margin-top: 0; }
-.ai-loading-box { padding: 40px; }
-.spinner { color: var(--wl-navy); width: 24px; height: 24px; }
-
-.ai-result-card { 
-    background: #F8FAFC; 
-    border: 1px solid #E2E8F0; 
-    border-radius: 16px; 
-    padding: 32px; 
+.ai-result-area {
+    margin-top: 0;
 }
-.theme-dark .ai-result-card { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.1); }
 
-.result-header { margin-bottom: 24px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 16px; }
-.result-label { font-size: 0.8rem; font-weight: 800; color: var(--wl-navy); letter-spacing: 1px; text-transform: uppercase; }
+.ai-loading-box {
+    padding: 40px;
+}
+
+.spinner {
+    color: var(--wl-navy);
+    width: 24px;
+    height: 24px;
+}
+
+.ai-result-card {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 32px;
+}
+
+.theme-dark .ai-result-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.result-header {
+    margin-bottom: 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding-bottom: 16px;
+}
+
+.result-label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--wl-navy);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
 
 /* Folding for Markdown */
-.wl-collapsible-header { cursor: pointer; display: flex; align-items: center; user-select: none; }
-.wl-collapse-indicator { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin-right: 4px; color: var(--wl-text-muted); transition: transform 0.2s; }
-.wl-collapsible-header:hover .wl-collapse-indicator { color: var(--wl-navy); }
-.wl-hidden { display: none !important; }
+.wl-collapsible-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    user-select: none;
+}
+
+.wl-collapse-indicator {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 4px;
+    color: var(--wl-text-muted);
+    transition: transform 0.2s;
+}
+
+.wl-collapsible-header:hover .wl-collapse-indicator {
+    color: var(--wl-navy);
+}
+
+.wl-hidden {
+    display: none !important;
+}
 
 /* === Month Timeline Modal (Card Style from Reference) === */
 .month-timeline-modal .month-timeline-header {
@@ -624,7 +1189,7 @@
     border-radius: 8px;
     padding: 8px;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .month-timeline-weeks {
@@ -636,7 +1201,9 @@
     width: 100%;
 }
 
-.theme-dark .month-timeline-weeks { background-color: #25262b; }
+.theme-dark .month-timeline-weeks {
+    background-color: #25262b;
+}
 
 .month-timeline-table {
     width: 100%;
@@ -651,7 +1218,7 @@
     padding: 10px;
     border-radius: 8px;
     text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .month-weekday-side-cell {
@@ -659,7 +1226,8 @@
     font-weight: 800;
     color: var(--wl-navy);
     font-size: 0.85rem;
-    width: 40px !important; /* Force match colgroup */
+    width: 40px !important;
+    /* Force match colgroup */
     white-space: nowrap;
     padding: 0 4px !important;
 }
@@ -674,21 +1242,24 @@
 .month-day-cell {
     background-color: var(--wl-background-primary);
     border-radius: 12px;
-    padding: 40px 8px 45px 8px; /* Extra bottom padding for EOD item */
+    padding: 40px 8px 45px 8px;
+    /* Extra bottom padding for EOD item */
     min-height: 120px;
     vertical-align: top;
     position: relative;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border: 1px solid rgba(0,0,0,0.05);
-    overflow: hidden; /* Ensure absolute children don't overflow border-radius */
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    /* Ensure absolute children don't overflow border-radius */
 }
 
 .month-day-cell .timeline-item.timeline-item-end {
     position: absolute !important;
     bottom: 8px !important;
     right: 12px !important;
-    width: auto !important; /* Let content decide width */
+    width: auto !important;
+    /* Let content decide width */
     background-color: transparent !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -719,7 +1290,9 @@
     stroke-width: 2px;
 }
 
-.month-day-cell.clickable { cursor: pointer; }
+.month-day-cell.clickable {
+    cursor: pointer;
+}
 
 .month-day-cell.empty-cell {
     background-color: transparent;
@@ -737,7 +1310,10 @@
     opacity: 0.8;
 }
 
-.month-day-cell .date-label.today { color: var(--wl-accent-secondary); opacity: 1; }
+.month-day-cell .date-label.today {
+    color: var(--wl-accent-secondary);
+    opacity: 1;
+}
 
 .month-day-cell .date-label::after {
     content: '';
@@ -750,32 +1326,592 @@
     opacity: 0.5;
 }
 
-/* === Global Modal Fixes (Force Full Width) === */
-/* This is crucial to override Obsidian's default modal styles */
-.modal-container:has(.work-logger-dashboard-modal),
-.modal-container:has(.month-timeline-modal) {
-    padding: 0 !important;
+/* === Global Modal Fixes (Direct Class Control) === */
+
+/* 1. 彻底物理移除遮罩层 */
+.modal-container:has(.wl-dashboard-modal) .modal-bg,
+.modal-container:has(.wl-timeline-modal) .modal-bg {
+    display: none !important;
 }
 
-.modal-container .modal.work-logger-dashboard-modal,
-.modal-container .modal.month-timeline-modal {
+/* 2. 看板与时间线视图的通用外观：单层、轻量、无影 */
+.modal.wl-dashboard-modal,
+.modal.wl-timeline-modal {
+    background-color: var(--wl-background-primary) !important;
+    border: 1px solid var(--wl-border-color) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 12px !important;
+    height: 90vh !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    margin: 0 auto !important;
+    /* 水平居中 */
+}
+
+/* 3. 各自的宽度控制 */
+.modal.wl-dashboard-modal {
+    max-width: 1100px !important;
+    width: 90vw !important;
+}
+
+.modal.wl-timeline-modal {
     max-width: 98vw !important;
     width: 98vw !important;
-    height: 95vh !important;
-    max-height: 95vh !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border-radius: 20px;
-    background-color: var(--wl-background-primary);
 }
 
-/* Ensure content takes full space */
+/* 4. 内容层撑满 */
 .modal-content.work-logger-dashboard-modal,
 .modal-content.month-timeline-modal {
     width: 100% !important;
     height: 100% !important;
-    max-width: none !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
     padding: 0 !important;
     display: flex;
     flex-direction: column;
+}
+
+/* 优化时间线单元格文字展示 */
+.month-timeline-table .timeline-content-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    /* 适当放宽文字限制 */
+}
+
+.month-timeline-table .month-day-cell {
+    min-width: 12vw;
+    /* 确保列有最小宽度支撑 */
+}
+
+/* === Dashboard Buttons (Modern & Flat) === */
+.custom-range-btn,
+.icon-copy-btn,
+.mode-icon-btn,
+.copy-report-btn {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    padding: 6px;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+}
+
+.custom-range-btn:hover,
+.icon-copy-btn:hover,
+.mode-icon-btn:hover,
+.copy-report-btn:hover {
+    background-color: var(--background-modifier-hover) !important;
+    color: var(--text-normal);
+}
+
+.custom-range-btn svg,
+.icon-copy-btn svg,
+.mode-icon-btn svg,
+.copy-report-btn svg {
+    width: 20px !important;
+    height: 20px !important;
+    stroke-width: 2px !important;
+}
+
+.mode-icon-btn.active {
+    color: var(--text-accent) !important;
+    background-color: var(--background-modifier-active-hover) !important;
+}
+
+.start-gen-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--interactive-accent) !important;
+    color: white !important;
+    border: none !important;
+    padding: 8px 16px !important;
+    border-radius: 8px !important;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.start-gen-btn:active {
+    transform: scale(0.98);
+}
+
+.start-gen-btn .btn-icon svg {
+    width: 20px !important;
+    height: 20px !important;
+    stroke-width: 2px !important;
+}
+
+/* === Modern Calendar Header === */
+.calendar-header-modern {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    /* 减小上下 padding */
+    margin-bottom: 8px;
+    /* 减小 margin */
+    gap: 12px;
+}
+
+/* 左侧日历徽章 */
+.calendar-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #A855F7, #7C3AED);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+    flex-shrink: 0;
+}
+
+.calendar-badge svg {
+    width: 20px;
+    height: 20px;
+    stroke: white;
+    stroke-width: 2;
+}
+
+/* 月份标题 */
+/* 月份标题 */
+.calendar-title {
+    flex: 1;
+    margin: 0;
+    font-size: 1.05rem;
+    /* 微微减小字体 */
+    font-weight: 700;
+    color: var(--wl-text-normal);
+    text-align: center;
+}
+
+/* 胶囊状导航组 - 彻底扁平化，匹配 Obsidian 原生风格 */
+.calendar-nav-group {
+    display: flex;
+    align-items: center;
+    background: transparent;
+    padding: 0;
+    gap: 0;
+}
+
+.calendar-nav-group .nav-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--wl-text-muted);
+    /* 默认灰色，像原生按钮 */
+    transition: background-color 0.1s ease, color 0.1s ease;
+    opacity: 1;
+    margin: 0 1px;
+    padding: 0;
+    box-shadow: none !important;
+}
+
+.calendar-nav-group .nav-btn:hover {
+    background-color: var(--wl-background-modifier-hover);
+    color: var(--wl-text-normal);
+}
+
+.calendar-nav-group .nav-btn svg {
+    width: 18px !important;
+    height: 18px !important;
+    stroke-width: 2px !important;
+    min-width: 18px;
+    min-height: 18px;
+    stroke: currentColor;
+}
+
+.calendar-nav-group .nav-btn.today-btn:hover {
+    color: var(--wl-accent-color);
+    /* 只有 hover 时显示强调色 */
+}
+
+.calendar-nav-group .nav-btn.recurring-btn:hover {
+    color: var(--wl-purple);
+}
+
+/* === Holiday Styles === */
+
+/* 周末日期头 */
+.day-header.weekend-header {
+    color: rgba(239, 68, 68, 0.7);
+}
+
+/* 普通周末日期数字 */
+.weekend-day-number {
+    color: rgba(239, 68, 68, 0.7) !important;
+}
+
+/* 休息日（节假日） */
+.day-cell.holiday-day {
+    background: rgba(239, 68, 68, 0.08);
+}
+
+/* 移除横线 */
+/*.day-cell.holiday-day::before { ... }*/
+
+/* 补班日 */
+.day-cell.workday-day {
+    background: rgba(59, 130, 246, 0.08);
+}
+
+/* 移除横线 */
+/*.day-cell.workday-day::before { ... }*/
+
+/* 节假日徽章 */
+.holiday-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 0.55rem;
+    font-weight: 700;
+    padding: 1px 3px;
+    border-radius: 3px;
+    line-height: 1;
+}
+
+.holiday-badge.rest-badge {
+    background: rgba(239, 68, 68, 0.15);
+    color: #DC2626;
+}
+
+.holiday-badge.work-badge {
+    background: rgba(59, 130, 246, 0.15);
+    color: #2563EB;
+}
+
+.theme-dark .holiday-badge.rest-badge {
+    background: rgba(239, 68, 68, 0.25);
+    color: #F87171;
+}
+
+.theme-dark .holiday-badge.work-badge {
+    background: rgba(59, 130, 246, 0.25);
+    color: #60A5FA;
+}
+
+/* === Recurring Schedule Modal === */
+.recurring-schedule-modal {
+    padding: 24px;
+}
+
+.recurring-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.recurring-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.recurring-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.recurring-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: white;
+}
+
+.recurring-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--wl-text-normal);
+}
+
+.recurring-add-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--wl-accent-color);
+    background: transparent;
+    color: var(--wl-accent-color);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.recurring-add-btn:hover {
+    background: var(--wl-accent-color);
+    color: white;
+}
+
+.recurring-add-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.recurring-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.recurring-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--wl-text-muted);
+    font-style: italic;
+}
+
+.recurring-card {
+    background: var(--wl-background-secondary);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid var(--wl-border-color);
+}
+
+.recurring-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.recurring-card-header .header-left {
+    display: flex;
+    align-items: center;
+}
+
+.recurring-enable-toggle {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.recurring-delete-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    color: var(--wl-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.recurring-delete-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #EF4444;
+}
+
+.recurring-delete-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+.recurring-main-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.recurring-time-input,
+.recurring-title-input {
+    height: 34px;
+    /* 统一高度 */
+    box-sizing: border-box;
+    padding: 0 10px;
+    border-radius: 6px;
+    border: 1px solid var(--wl-border-color);
+    background: var(--wl-background-primary);
+    font-size: 0.85rem;
+    color: var(--wl-text-normal);
+}
+
+.recurring-time-input {
+    width: 110px;
+    flex-shrink: 0;
+    font-family: var(--font-monospace);
+    text-align: center;
+}
+
+.recurring-title-input {
+    flex: 1;
+}
+
+.recurring-time-input:focus,
+.recurring-title-input:focus,
+.recurring-desc-input:focus {
+    outline: none;
+    border-color: var(--wl-accent-color);
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.recurring-weekdays {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+}
+
+.weekday-btn {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid var(--wl-border-color);
+    background: var(--wl-background-primary);
+    color: var(--wl-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.weekday-btn:hover {
+    border-color: var(--wl-accent-color);
+    color: var(--wl-accent-color);
+}
+
+.weekday-btn.active {
+    background: var(--wl-accent-color) !important;
+    border-color: var(--wl-accent-color) !important;
+    color: white !important;
+}
+
+.recurring-desc-input {
+    width: 100%;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--wl-border-color);
+    background: var(--wl-background-primary);
+    font-size: 0.8rem;
+    color: var(--wl-text-muted);
+    resize: none;
+    line-height: 1.4;
+    min-height: 60px;
+}
+
+/* Month Timeline Modal - Holiday Styling */
+.month-day-cell.holiday-day {
+    background: rgba(239, 68, 68, 0.05);
+}
+
+/* 移除横线 */
+/*.month-day-cell.holiday-day::before { ... }*/
+
+.month-day-cell.workday-day {
+    background: rgba(59, 130, 246, 0.05);
+}
+
+/* 移除横线 */
+/*.month-day-cell.workday-day::before { ... }*/
+
+.month-day-cell .holiday-badge {
+    top: 6px;
+    right: 6px;
+    font-size: 0.65rem;
+    padding: 2px 4px;
+}
+
+/* === Button Styles Cleanup === */
+
+/* 迁移按钮 - 扁平化原生风格 */
+.migrate-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--wl-text-muted);
+    border-radius: 5px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    /* 确保和其他导航元素对齐 */
+    height: 30px;
+    width: 30px;
+    box-shadow: none !important;
+}
+
+.migrate-btn:hover {
+    background-color: var(--wl-background-modifier-hover);
+    color: var(--wl-text-normal);
+}
+
+.migrate-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2px;
+}
+
+/* 周期性日程删除按钮 - 危险色增强版 */
+.recurring-delete-btn {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    color: #ff4d4f !important;
+    /* 强制使用鲜艳的红色 */
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    opacity: 0.8;
+}
+
+.recurring-delete-btn:hover {
+    background-color: #ff4d4f !important;
+    color: white !important;
+    opacity: 1;
+}
+
+.recurring-delete-btn svg {
+    width: 22px !important;
+    height: 22px !important;
+    stroke: #ff4d4f !important;
+    /* 强制图标线条为红色 */
+    stroke-width: 2.5px !important;
+}
+
+.recurring-delete-btn:hover svg {
+    stroke: white !important;
+    /* 悬停时变为白色 */
 }

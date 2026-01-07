@@ -12,7 +12,7 @@ export const zh: Record<string, string> = {
     'weekStatTooltip': '生成本周工作报告',
     'today': '今天',
     'dateDayFormat': 'DD日',
-    
+
     // daily note
     'dailyNoteTemplate': `### 待办事项
 - [ ] 
@@ -117,7 +117,7 @@ export const zh: Record<string, string> = {
     'defaultEndTime': '默认结束时间',
     'defaultEndTimeDesc': '创建新日报时，自动插入的默认结束时间。',
     'insertTimedListItem': '插入带时间的新清单项',
-    
+
     // custom report
     'customReportTitle': '选择日期范围',
     'startDate': '开始日期 (YYYY-MM-DD)',
@@ -127,10 +127,65 @@ export const zh: Record<string, string> = {
     'migrateTasks': '迁移上月未完成任务',
     'migratedCount': '已迁移 {{n}} 个任务到今天',
     'noPrevTasks': '上个月没有未完成的任务',
-    
+
     // date shortcuts
     'thisWeek': '本周',
     'lastWeek': '上周',
     'thisMonth': '本月',
     'last7Days': '近7天',
+
+    // recurring schedules
+    'recurringSchedules': '周期性日程',
+    'addSchedule': '添加日程',
+    'noRecurringSchedules': '暂无周期性日程，点击上方按钮添加',
+    'scheduleTitle': '日程标题',
+    'scheduleDescription': '日程描述（可选）',
+    'deleteSchedule': '删除日程',
+    'confirmDeleteSchedule': '确定要删除这个周期性日程吗？',
+    'delete': '删除',
+
+    // navigation
+    'goToToday': '回到今天',
+
+    // clipboard
+    'taskContent': '任务内容',
+    'durationHours': '时长(小时)',
+    'durationDays': '时长(人天)',
+    'total': '合计',
+    'copySuccess': '已复制到剪贴板',
+    'aiMonthNoContent': '没有找到该月份的工作记录',
+    'moreTasks': '还有 {{count}} 项任务...',
+    'noTasks': '该分类下暂无任务',
+    'jumpToFile': '点击跳转到源文件',
+    'taskFileNotFound': '未找到该任务对应的源文件',
+
+    // categories
+    'cat_meeting': '会议沟通',
+    'cat_coding': '编码开发',
+    'cat_design': '架构设计',
+    'cat_reading': '阅读学习',
+    'cat_writing': '文档撰写',
+    'cat_testing': '测试验证',
+    'cat_break': '休息闲暇',
+    'cat_exercise': '运动健身',
+    'cat_communication': '邮件通讯',
+    'cat_planning': '计划规划',
+    'cat_work': '常规工作',
+
+    // settings - categories
+    'categoryConfigTitle': '分类体系管理',
+    'categoryConfigDesc': '自定义任务分类及其识别规则（正则表达式）。启用后，看板和时间线将按此体系进行统计。',
+    'aiGenCategories': 'AI 自动生成分类',
+    'aiGenCategoriesDesc': '基于你已有的工作日志内容，让 AI 自动分析并归纳出一套适合你的分类体系。',
+    'genBtn': '立即生成',
+    'generating': '分析中...',
+    'genSuccess': '分类体系已更新',
+    'genFailed': '生成失败：',
+    'catName': '分类名称',
+    'catIcon': '图标 (Lucide)',
+    'catColor': '颜色',
+    'catPatterns': '匹配规则 (Regex)',
+    'addCategory': '添加分类',
+    'restoreDefaults': '恢复默认分类',
+    'restoreSuccess': '分类体系已恢复至默认状态',
 };

@@ -116,4 +116,75 @@ Annual Log Data:
     'timelineTitle': 'Timeline',
     'timelineEmpty': 'Open a work log file to view timeline',
     'insertTimedListItem': 'Insert new list item with time',
+
+    // custom report
+    'customReportTitle': 'Select Date Range',
+    'startDate': 'Start Date (YYYY-MM-DD)',
+    'endDate': 'End Date (YYYY-MM-DD)',
+    'invalidDate': 'Invalid date format',
+    'generate': 'Generate Report',
+    'migrateTasks': 'Migrate last month tasks',
+    'migratedCount': 'Migrated {{n}} tasks to today',
+    'noPrevTasks': 'No incomplete tasks from last month',
+
+    // date shortcuts
+    'thisWeek': 'This Week',
+    'lastWeek': 'Last Week',
+    'thisMonth': 'This Month',
+    'last7Days': 'Last 7 Days',
+
+    // recurring schedules
+    'recurringSchedules': 'Recurring Schedules',
+    'addSchedule': 'Add Schedule',
+    'noRecurringSchedules': 'No recurring schedules. Click above to add.',
+    'scheduleTitle': 'Schedule Title',
+    'scheduleDescription': 'Description (optional)',
+    'deleteSchedule': 'Delete Schedule',
+    'confirmDeleteSchedule': 'Are you sure you want to delete this recurring schedule?',
+    'delete': 'Delete',
+
+    // navigation
+    'goToToday': 'Go to Today',
+
+    // clipboard
+    'taskContent': 'Task',
+    'durationHours': 'Hours',
+    'durationDays': 'Days',
+    'total': 'Total',
+    'copySuccess': 'Copied to clipboard',
+    'aiMonthNoContent': 'No work records found for this month',
+    'moreTasks': 'and {{count}} more...',
+    'noTasks': 'No tasks in this category',
+    'jumpToFile': 'Click to jump to source file',
+    'taskFileNotFound': 'Could not find the source file for this task',
+
+    // categories
+    'cat_meeting': 'Meetings',
+    'cat_coding': 'Coding',
+    'cat_design': 'Design',
+    'cat_reading': 'Reading/Learning',
+    'cat_writing': 'Writing',
+    'cat_testing': 'Testing',
+    'cat_break': 'Breaks',
+    'cat_exercise': 'Exercise',
+    'cat_communication': 'Communication',
+    'cat_planning': 'Planning',
+    'cat_work': 'Work',
+
+    // settings - categories
+    'categoryConfigTitle': 'Category Management',
+    'categoryConfigDesc': 'Customize task categories and their recognition rules (regex). Once enabled, the dashboard and timeline will use this system.',
+    'aiGenCategories': 'AI Auto-generate Categories',
+    'aiGenCategoriesDesc': 'Let AI analyze your existing work logs and summarize a classification system that suits you.',
+    'genBtn': 'Generate Now',
+    'generating': 'Analyzing...',
+    'genSuccess': 'Category system updated',
+    'genFailed': 'Generation failed: ',
+    'catName': 'Category Name',
+    'catIcon': 'Icon (Lucide)',
+    'catColor': 'Color',
+    'catPatterns': 'Match Rules (Regex)',
+    'addCategory': 'Add Category',
+    'restoreDefaults': 'Restore Default Categories',
+    'restoreSuccess': 'Categories restored to default',
 };

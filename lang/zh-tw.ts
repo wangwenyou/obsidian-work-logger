@@ -12,7 +12,7 @@ export const zh_tw: Record<string, string> = {
     'weekStatTooltip': '生成本週工作報告',
     'today': '今天',
     'dateDayFormat': 'DD日',
-    
+
     // daily note
     'dailyNoteTemplate': `### 待辦事項
 - [ ] 
@@ -117,4 +117,47 @@ export const zh_tw: Record<string, string> = {
     'defaultEndTime': '預設結束時間',
     'defaultEndTimeDesc': '創建新日報時，自動插入的預設結束时间。',
     'insertTimedListItem': '插入帶時間的新清單項',
+    // custom report
+    'customReportTitle': '選擇日期範圍',
+    'startDate': '開始日期 (YYYY-MM-DD)',
+    'endDate': '結束日期 (YYYY-MM-DD)',
+    'invalidDate': '日期格式無效',
+    'generate': '生成報告',
+    'migrateTasks': '遷移上月未完成任務',
+    'migratedCount': '已遷移 {{n}} 個任務到今天',
+    'noPrevTasks': '上個月沒有未完成的任务',
+
+    // recurring schedules
+    'recurringSchedules': '週期性日程',
+    'addSchedule': '添加日程',
+    'noRecurringSchedules': '暫無週期性日程，點擊上方按鈕添加',
+    'scheduleTitle': '日程標題',
+    'scheduleDescription': '日程描述（選填）',
+    'deleteSchedule': '刪除日程',
+    'confirmDeleteSchedule': '確定要刪除這個週期性日程嗎？',
+    'delete': '刪除',
+
+    // navigation
+    'goToToday': '回到今天',
+
+    // clipboard
+    'taskContent': '任務內容',
+    'durationHours': '時長(小時)',
+    'durationDays': '時長(人天)',
+    'total': '合計',
+    'copySuccess': '已複製到剪貼板',
+    'aiMonthNoContent': '沒有找到該月份的工作記錄',
+
+    // categories
+    'cat_meeting': '會議溝通',
+    'cat_coding': '編碼開發',
+    'cat_design': '架構設計',
+    'cat_reading': '閱讀學習',
+    'cat_writing': '文檔撰寫',
+    'cat_testing': '測試驗證',
+    'cat_break': '休息閒暇',
+    'cat_exercise': '運動健身',
+    'cat_communication': '郵件通訊',
+    'cat_planning': '計劃規劃',
+    'cat_work': '常規工作',
 };
