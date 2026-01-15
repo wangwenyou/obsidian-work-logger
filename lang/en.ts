@@ -187,4 +187,12 @@ Annual Log Data:
     'addCategory': 'Add Category',
     'restoreDefaults': 'Restore Default Categories',
     'restoreSuccess': 'Categories restored to default',
+
+    // maintenance
+    'maintenanceTitle': 'Maintenance',
+    'rebuildIndex': 'Rebuild Data Index',
+    'rebuildIndexDesc': 'Full scan to refresh trend data.',
+    'rebuildNow': 'Rebuild Now',
+    'rebuilding': 'Scanning...',
+    'rebuildSuccess': 'Index rebuilt successfully',
 };

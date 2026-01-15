@@ -29,6 +29,23 @@ export interface WorkLoggerSettings {
     defaultEndTime: string;
     recurringSchedules: RecurringScheduleData[];
     categories: CategoryDefinition[];
+    lastAiSuggestion?: {
+        content: string;
+        date: string;
+    };
+    lastWeeklyOptimization?: string;
+    mcpUrl: undefined,
+    mcpHeaders: undefined,
+    mcpMethod?: 'GET' | 'POST';
+    mcpPrompts: Array<{
+        label: string;
+        prompt: string;
+    }>;
+    mcpModalTitle: string; // 新增字段
+    mcpCache?: {
+        content: string;
+        lastFetched: string;
+    };
 }
 
 /**
@@ -70,7 +87,17 @@ export const DEFAULT_SETTINGS: WorkLoggerSettings = {
         { id: 'communication', name: '邮件通讯', icon: 'mail', patterns: '邮件|email|mail|消息|message|回复|reply|slack|钉钉|微信', color: '#8b5cf6' },
         { id: 'planning', name: '计划规划', icon: 'calendar', patterns: '计划|plan|规划|安排|schedule|todo|待办', color: '#f97316' },
         { id: 'work', name: '常规工作', icon: 'briefcase', patterns: '.*', color: '#64748b' }
-    ]
+    ],
+    mcpUrl: undefined,
+    mcpHeaders: undefined,
+    mcpMethod: 'POST',
+    mcpPrompts: [
+        { label: '📝 总结待办', prompt: '帮我总结最近的待办事项' },
+        { label: '🎯 今日重点', prompt: '分析今日工作重点' },
+        { label: '⚠️ 提取风险', prompt: '提取当前任务中的潜在风险点' }
+    ],
+    mcpModalTitle: 'MCP 智能助理', // 默认标题
+    mcpCache: undefined
 };
 
 /**

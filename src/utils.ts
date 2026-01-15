@@ -1,5 +1,6 @@
 import { moment, App } from 'obsidian';
 import type { TimelineItem, TaskEntry, TaskInfo, CategoryDefinition } from './types';
+import { preloadHolidays, getDayDisplayType } from './holidays';
 
 /**
  * 任务分类关键词映射
@@ -265,4 +266,27 @@ export async function sampleTaskTitles(app: App, rootFolder: string, limit = 100
     }
     
     return Array.from(titles).slice(0, limit);
+}
+
+/**
+ * 获取经过中国节假日调整的工作周时间范围
+ */
+export async function getAdjustedWeekRange(date: moment.Moment): Promise<{ start: moment.Moment, end: moment.Moment }> {
+    await preloadHolidays([date.year()]);
+    
+    let start = date.clone().startOf('isoWeek');
+    let end = date.clone().endOf('isoWeek');
+
+    // 检查周一前的周末是否为补班
+    const sun = start.clone().subtract(1, 'day');
+    const sat = start.clone().subtract(2, 'days');
+
+    if ((await getDayDisplayType(sun)).type === 'workday') start = sun;
+    if ((await getDayDisplayType(sat)).type === 'workday') start = sat;
+
+    // 检查周日后的周末是否为补班 (非常罕见，但做兼容)
+    const nextMon = end.clone().add(1, 'day');
+    if ((await getDayDisplayType(nextMon)).type === 'workday') end = nextMon;
+    
+    return { start, end };
 }

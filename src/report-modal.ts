@@ -3,7 +3,7 @@ import { t } from '../lang';
 import type { WorkLoggerSettings } from './types';
 import type WorkLoggerPlugin from '../main';
 import { CustomDateRangeModal } from './custom-date-range-modal';
-import { getTaskCategory } from './utils';
+import { getTaskCategory, getAdjustedWeekRange } from './utils';
 
 /**
  * 报告弹窗类
@@ -22,10 +22,10 @@ export class ReportModal extends Modal {
     endDate?: moment.Moment;
     selectedCategory: string | null = null;
 
-    constructor(app: App, plugin: WorkLoggerPlugin, stats: Record<string, number>, weekStart: moment.Moment, settings: WorkLoggerSettings, rawContent: string, endDate?: moment.Moment) {
+    constructor(app: App, plugin: WorkLoggerPlugin, weekStart: moment.Moment, settings: WorkLoggerSettings, rawContent: string, endDate?: moment.Moment) {
         super(app);
         this.plugin = plugin;
-        this.stats = stats;
+        this.stats = {}; // 在 onOpen 时会重新计算
         this.weekStart = weekStart;
         this.settings = settings;
         this.rawContent = rawContent;
@@ -34,11 +34,34 @@ export class ReportModal extends Modal {
         this.customPromptText = this.getCurrentPrompt();
     }
 
-    onOpen() {
+    async onOpen() {
         const { contentEl, modalEl } = this;
         contentEl.empty();
         modalEl.addClass('wl-dashboard-modal');
         contentEl.addClass('work-logger-dashboard-modal');
+
+        // 重新计算报告范围和统计数据
+        let currentStart = this.weekStart;
+        let currentEnd = this.endDate;
+
+        if (this.reportMode === 'week') {
+            const { start, end } = await getAdjustedWeekRange(this.weekStart);
+            currentStart = start;
+            currentEnd = end;
+        } else if (this.reportMode === 'month') {
+            currentStart = this.weekStart.clone().startOf('month');
+            currentEnd = this.weekStart.clone().endOf('month');
+        } else if (this.reportMode === 'year') {
+            currentStart = this.weekStart.clone().startOf('year');
+            currentEnd = this.weekStart.clone().endOf('year');
+        } else { // custom
+            // 保持原样
+        }
+        
+        // 从索引重新获取最新的统计数据
+        this.stats = this.plugin.indexer.getStatsInRange(currentStart, currentEnd || currentStart);
+        this.weekStart = currentStart;
+        this.endDate = currentEnd;
 
         // 样式已迁移至 styles.css 中统一管理
 
@@ -77,8 +100,14 @@ export class ReportModal extends Modal {
 
         // 面板内容：快捷按钮 + 原生选择器
         const pickerTop = datePickerPanel.createDiv({ cls: 'picker-shortcuts' });
+        
+        pickerTop.createEl('button', { text: t('thisWeek'), cls: 'shortcut-btn' }).onclick = async () => {
+            const { start, end } = await getAdjustedWeekRange(moment());
+            this.close();
+            void this.plugin.generateCustomReport(start, end);
+        };
+
         const shortcuts = [
-            { label: t('thisWeek'), start: moment().startOf('isoWeek'), end: moment().endOf('isoWeek') },
             { label: t('lastWeek'), start: moment().subtract(1, 'week').startOf('isoWeek'), end: moment().subtract(1, 'week').endOf('isoWeek') },
             { label: t('thisMonth'), start: moment().startOf('month'), end: moment().endOf('month') }
         ];
@@ -117,7 +146,13 @@ export class ReportModal extends Modal {
         // 底部留一个小间隙或者 Flex 布局处理，这里直接创建滚动区
         const scrollArea = contentEl.createDiv({ cls: 'dashboard-scroll-area' });
 
-        // 2. 核心数据汇总区
+        // 2. 趋势分析区 (New)
+        this.renderTrendSection(scrollArea);
+
+        // 3. 专家优化建议 (New)
+        this.renderWeeklyOptimization(scrollArea);
+
+        // 4. 核心数据汇总区 (原为 3)
         const statsGrid = scrollArea.createDiv({ cls: 'stats-grid' });
         let totalH = 0;
         Object.values(this.stats).forEach(h => totalH += h);
@@ -190,23 +225,26 @@ export class ReportModal extends Modal {
         
         const sortedTasks = filteredStats.sort((a, b) => b[1] - a[1]);
         const displayTasks = sortedTasks.slice(0, 10);
-        const colors = ['bg-indigo', 'bg-emerald', 'bg-blue', 'bg-amber', 'bg-purple', 'bg-rose', 'bg-cyan'];
 
-        displayTasks.forEach(([name, hours], i) => {
+        displayTasks.forEach(([name, hours]) => {
             const percentage = totalH > 0 ? (hours / totalH) * 100 : 0;
             const item = progressBarGroup.createDiv({ cls: 'progress-item clickable-task' });
             item.setAttribute('aria-label', t('jumpToFile') || 'Jump to file');
             
-            const info = item.createDiv({ cls: 'item-info' });
-
-            info.createSpan({ cls: 'item-name', text: name });
-            const statsSpan = info.createSpan({ cls: 'item-hours' });
-            statsSpan.createSpan({ text: `${hours.toFixed(1)}h`, cls: 'hours-value' });
-            statsSpan.createSpan({ text: ` (${percentage.toFixed(1)}%)`, cls: 'percentage-value' });
+            // 直接在 item 下创建 4 个独立的列元素
+            item.createSpan({ cls: 'item-name', text: name });
+            item.createSpan({ text: `${hours.toFixed(1)}h`, cls: 'item-hours-value' });
+            item.createSpan({ text: `(${percentage.toFixed(1)}%)`, cls: 'item-percentage-value' });
 
             const barBg = item.createDiv({ cls: 'bar-bg' });
-            const barFill = barBg.createDiv({ cls: `bar-fill ${colors[i % colors.length]}` });
+            const barFill = barBg.createDiv({ cls: 'bar-fill' });
             barFill.style.width = `${percentage}%`;
+
+            const { category } = getTaskCategory(name, this.settings.categories);
+            const catDef = this.settings.categories.find(c => c.id === category);
+            if (catDef?.color) {
+                barFill.style.backgroundColor = catDef.color;
+            }
 
             item.onclick = () => {
                 void this.jumpToTaskFile(name);
@@ -270,6 +308,94 @@ export class ReportModal extends Modal {
         genBtn.onclick = () => { void this.handleAIGeneration(); };
 
         this.aiContainer = aiSection.createDiv({ cls: 'ai-result-area' });
+    }
+
+    async renderTrendSection(container: HTMLElement) {
+        const trendContainer = container.createDiv({ cls: 'dashboard-trend-grid' });
+        
+        const weeklyCatStats: Record<string, number>[] = [];
+        const allRelevantCats = new Set<string>();
+
+        for (let i = 3; i >= 0; i--) {
+            const weekDate = moment().subtract(i, 'weeks');
+            const { start, end } = await getAdjustedWeekRange(weekDate);
+            const stats = this.plugin.indexer.getStatsInRange(start, end);
+            
+            const catHours: Record<string, number> = {};
+            Object.entries(stats).forEach(([name, hours]) => {
+                const { category } = getTaskCategory(name, this.settings.categories);
+                catHours[category] = (catHours[category] || 0) + hours;
+            });
+            weeklyCatStats.push(catHours);
+            Object.keys(catHours).forEach(c => allRelevantCats.add(c));
+        }
+
+        // 计算偏差值：|本周工时 - 前三周平均工时|
+        const catDeviations = Array.from(allRelevantCats)
+            .map(id => {
+                const v4 = weeklyCatStats[3][id] || 0;
+                const vAvgPrev = ( (weeklyCatStats[0][id] || 0) + (weeklyCatStats[1][id] || 0) + (weeklyCatStats[2][id] || 0) ) / 3;
+                return {
+                    id,
+                    deviation: Math.abs(v4 - vAvgPrev),
+                    def: this.settings.categories.find(c => c.id === id)
+                };
+            })
+            .filter(c => c.id !== 'work' && c.def)
+            .sort((a, b) => b.deviation - a.deviation)
+            .slice(0, 3); // 选出偏差最大的前 3 个
+
+        catDeviations.forEach(cat => {
+            if (!cat.def) return;
+            const values = weeklyCatStats.map(w => w[cat.id] || 0);
+            this.renderTrendChip(trendContainer, cat.def.name, cat.def.icon, values, cat.def.color || 'var(--text-muted)');
+        });
+    }
+
+    private renderTrendChip(container: HTMLElement, name: string, icon: string, values: number[], color: string) {
+        const chip = container.createDiv({ cls: 'trend-chip' });
+        
+        const info = chip.createDiv({ cls: 'trend-chip-info' });
+        setIcon(info.createSpan({ cls: 'trend-chip-icon' }), icon);
+        info.createSpan({ text: name, cls: 'trend-chip-name' });
+
+        const chartWrapper = chip.createDiv({ cls: 'trend-chart-wrapper' });
+        const chart = chartWrapper.createDiv({ cls: 'trend-chip-sparkline' });
+        const maxValue = Math.max(...values, 5);
+
+        // 添加均值线
+        const avg = (values[0] + values[1] + values[2]) / 3;
+        const avgLine = chartWrapper.createDiv({ cls: 'sparkline-avg-line' });
+        avgLine.style.bottom = `${Math.min((avg / maxValue) * 100, 95)}%`;
+
+        values.forEach((val, i) => {
+            const barWrapper = chart.createDiv({ cls: 'spark-bar-wrapper' });
+            const bar = barWrapper.createDiv({ cls: `spark-bar ${i === 3 ? 'is-current' : ''}` });
+            bar.style.height = `${Math.max((val / maxValue) * 100, 8)}%`;
+            bar.style.backgroundColor = color;
+        });
+
+        // 变化率指标
+        const changePercent = ((values[3] - avg) / (avg || 1)) * 100;
+        const indicator = chip.createDiv({ cls: 'trend-indicator' });
+        if (Math.abs(changePercent) > 10) {
+            const isUp = changePercent > 0;
+            indicator.addClass(isUp ? 'is-up' : 'is-down');
+            indicator.setText(`${isUp ? '↑' : '↓'}${Math.abs(changePercent).toFixed(0)}%`);
+        }
+    }
+
+    renderWeeklyOptimization(container: HTMLElement) {
+        const advice = this.plugin.settings.lastWeeklyOptimization;
+        if (!advice) return;
+
+        const adviceCard = container.createDiv({ cls: 'wl-dashboard-advice-card' });
+        const header = adviceCard.createDiv({ cls: 'wl-advice-header' });
+        setIcon(header.createSpan({ cls: 'wl-advice-icon' }), 'brain-circuit');
+        header.createSpan({ text: '效率诊断与建议', cls: 'wl-advice-title' });
+
+        const content = adviceCard.createDiv({ cls: 'wl-advice-content markdown-rendered' });
+        void MarkdownRenderer.render(this.plugin.app, advice, content, '', this.component);
     }
 
     getCurrentPrompt(): string {
@@ -437,27 +563,24 @@ export class ReportModal extends Modal {
 
     async jumpToTaskFile(taskName: string) {
         const root = this.settings.rootFolder;
-        const start = this.weekStart.clone();
-        const end = this.endDate ? this.endDate.clone() : this.weekStart.clone().add(6, 'days');
-
-        // 逆序检查每一天，找到最近出现该任务的文件
-        for (let d = end.clone(); d.isSameOrAfter(start); d.subtract(1, 'day')) {
-            const dateStr = d.format('YYYYMM');
-            const dayStr = d.format('DD');
-            const filePath = `${root}/${dateStr}/${dayStr}.md`;
+        
+        // 使用索引快速查找
+        const dates = this.plugin.indexer.findDatesWithTask(taskName);
+        
+        if (dates.length > 0) {
+            // 找到对应的文件
+            const targetDate = moment(dates[0]);
+            const filePath = `${root}/${targetDate.format('YYYYMM')}/${targetDate.format('DD')}.md`;
             
             const file = this.app.vault.getAbstractFileByPath(filePath);
             if (file instanceof TFile) {
-                const content = await this.app.vault.read(file);
-                // 简单包含判断，或者可以使用更精准的正则
-                if (content.includes(taskName)) {
-                    const leaf = this.app.workspace.getLeaf('tab');
-                    await leaf.openFile(file);
-                    this.close();
-                    return;
-                }
+                const leaf = this.app.workspace.getLeaf('tab');
+                await leaf.openFile(file);
+                this.close();
+                return;
             }
         }
+        
         new Notice(t('taskFileNotFound') || 'Could not find the source file for this task');
     }
 

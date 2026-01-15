@@ -838,13 +838,25 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: 10px; /* 减小底部间距 */
+    padding-bottom: 4px; /* 减小内边距 */
+    border-bottom: 1px solid var(--background-modifier-border); /* 重新添加底部边框 */
 }
 
 .dist-title {
-    font-size: 1.1rem;
+    font-size: 0.95rem; /* 减小字体 */
     font-weight: 700;
-    color: var(--wl-text-normal);
+    color: var(--text-normal);
+}
+
+.dist-header .icon-box-mini { /* 假设标题旁的图标使用这个类 */
+    width: 24px; /* 减小图标盒大小 */
+    height: 24px;
+}
+
+.dist-header .icon-box-mini svg {
+    width: 16px; /* 减小图标本身大小 */
+    height: 16px;
 }
 
 .icon-copy-btn {
@@ -869,63 +881,56 @@
 .progress-bar-group {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-}
-
-.progress-item {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    gap: 4px; /* Reduced vertical gap between items */
 }
 
 .progress-item.clickable-task {
-    cursor: pointer;
-    padding: 4px;
-    margin: -4px;
+    display: grid;
+    grid-template-columns: 1fr 50px 55px 70px; /* 任务名 | 小时 | 百分比 | 进度条 */
+    align-items: center;
+    gap: 12px;
+    padding: 6px 8px;
     border-radius: 4px;
-    transition: background 0.2s ease;
+    background: var(--background-secondary-alt);
+    transition: background-color 0.2s ease;
 }
 
 .progress-item.clickable-task:hover {
     background: var(--background-modifier-hover);
 }
 
-.progress-item .item-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-}
-
 .progress-item .item-name {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--wl-text-normal);
-}
-
-.progress-item .item-hours {
-    font-size: 0.9rem;
-    font-family: monospace;
-    display: flex;
-    gap: 4px;
-}
-
-.hours-value {
-    font-weight: 700;
-    color: var(--wl-text-normal);
-}
-
-.percentage-value {
-    color: var(--wl-text-muted);
-    font-size: 0.85em;
-    font-weight: normal;
-}
-
-.bar-bg {
-    height: 10px;
-    background: #F1F5F9;
-    border-radius: 5px;
+    white-space: nowrap;
     overflow: hidden;
-    width: 100%;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.progress-item .item-hours-value {
+    font-family: var(--font-monospace);
+    font-size: 12px;
+    font-weight: 600;
+    text-align: right;
+    color: var(--text-normal);
+}
+
+.progress-item .item-percentage-value {
+    font-family: var(--font-monospace);
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: left;
+}
+
+.progress-item .bar-bg {
+    height: 6px;
+    background: var(--background-primary);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-item .bar-fill {
+    height: 100%;
 }
 
 .theme-dark .bar-bg {
@@ -1184,12 +1189,27 @@
 }
 
 .month-nav-btn {
-    background: white;
-    border: 1px solid var(--wl-border-color);
-    border-radius: 8px;
-    padding: 8px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    padding: 4px;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+}
+
+.month-nav-btn:hover {
+    background: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.month-nav-btn svg {
+    width: 20px;
+    height: 20px;
 }
 
 .month-timeline-weeks {
@@ -1535,6 +1555,19 @@
     min-width: 18px;
     min-height: 18px;
     stroke: currentColor;
+}
+
+.calendar-nav-group .nav-btn.ai-coach-btn svg {
+    color: var(--interactive-accent);
+}
+
+.calendar-nav-group .nav-btn.is-spinning svg {
+    animation: wl-spin 1s linear infinite;
+}
+
+@keyframes wl-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .calendar-nav-group .nav-btn.today-btn:hover {
@@ -1915,3 +1948,763 @@
     stroke: white !important;
     /* 悬停时变为白色 */
 }
+
+/* === Dashboard Trend Section === */
+.dashboard-trend-section {
+    background: var(--background-secondary);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.trend-title {
+    margin: 0 0 16px 0 !important;
+    font-size: 14px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.trend-bars-wrapper {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    height: 120px;
+    gap: 12px;
+}
+
+.trend-bar-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.trend-bar-bg {
+    width: 32px;
+    height: 80px;
+    background: var(--background-primary);
+    border-radius: 4px; /* 改为稍微方一点，方便看堆叠 */
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column-reverse; /* 自下而上堆叠 */
+}
+
+.trend-bar-segment {
+    width: 100%;
+    transition: height 0.5s ease;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.wl-gen-suggestion-btn {
+    background: var(--interactive-accent);
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.wl-gen-suggestion-btn:hover {
+    background: var(--interactive-accent-hover);
+}
+
+.trend-bar-value {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.trend-bar-label {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+/* === Sidebar Suggestion === */
+.wl-suggestion-details {
+    margin: 10px;
+    background: var(--background-secondary-alt);
+    border-radius: 8px;
+    border: 1px solid var(--background-modifier-border);
+    overflow: hidden;
+}
+
+.wl-suggestion-summary {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 撑开标题和按钮 */
+    gap: 8px;
+    color: var(--interactive-accent);
+}
+
+.summary-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wl-refresh-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.wl-refresh-icon:hover {
+    background: var(--background-modifier-hover);
+}
+
+.wl-refresh-icon.is-spinning svg {
+    animation: wl-spin 1s linear infinite;
+}
+
+@keyframes wl-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* === Trend Focus Chart === */
+.trend-focus-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.trend-cat-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.cat-group-info {
+    width: 120px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.cat-group-name {
+    font-size: 12px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cat-group-bars {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    height: 40px;
+    gap: 4px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+/* === Active Tracker (Elegant Flat Style) === */
+.wl-active-tracker.is-hidden {
+    display: none;
+}
+
+.wl-active-tracker {
+    margin: 6px 12px 2px 12px;
+    padding: 8px 12px;
+    background: var(--background-secondary-alt);
+    border-radius: 6px;
+    border: 1px solid var(--background-modifier-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.wl-tracker-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.wl-tracker-title-mini {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-normal);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 极其缓慢且微弱的呼吸灯 */
+.wl-tracker-title-mini::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background-color: var(--interactive-accent);
+    border-radius: 50%;
+    display: inline-block;
+    animation: wl-pulse-accent 6s ease-in-out infinite;
+    opacity: 0.4;
+}
+
+@keyframes wl-pulse-accent {
+    0% { transform: scale(0.9); opacity: 0.3; }
+    50% { transform: scale(1.05); opacity: 0.6; }
+    100% { transform: scale(0.9); opacity: 0.3; }
+}
+
+.wl-tracker-timer-mini {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--font-monospace);
+    margin-left: 15px; /* 避开圆点对齐标题文本 */
+}
+
+.wl-tracker-stop-mini {
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+}
+
+.wl-tracker-stop-mini:hover {
+    background: var(--background-modifier-hover);
+    color: var(--interactive-accent);
+    transform: scale(1.1);
+}
+
+.wl-tracker-stop-mini svg {
+    width: 22px; /* 增大图标尺寸 */
+    height: 22px;
+    stroke-width: 2.5px;
+}
+
+/* === Tasks List Fixes === */
+.tasks-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.tasks-header-row h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.migrate-btn {
+    flex-shrink: 0;
+}
+
+/* === AI Coach Tip Card (Custom Callout Style) === */
+.wl-tip-card {
+    margin: 4px 12px;
+    padding: 8px 10px;
+    background: rgba(var(--callout-color), 0.1);
+    background-color: var(--background-secondary-alt);
+    border-left: 3px solid var(--interactive-accent);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.1s ease, background-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.wl-tip-card:hover {
+    background-color: var(--background-modifier-hover);
+    transform: translateY(-1px);
+}
+
+.wl-tip-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--interactive-accent);
+}
+
+.wl-tip-icon svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 2.5px;
+}
+
+.wl-tip-title {
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.wl-tip-content {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--text-normal);
+    padding-left: 2px;
+}
+
+/* === Horizontal Trend Grid === */
+.dashboard-trend-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    background: var(--background-secondary-alt);
+    border-radius: 6px;
+    border: 1px solid var(--background-modifier-border);
+}
+
+.trend-chip {
+    flex: 1;
+    min-width: 160px;
+    display: flex;
+    align-items: center; /* 确保所有子项垂直居中 */
+    gap: 10px;
+    padding: 6px 8px;
+    background: var(--background-primary);
+    border-radius: 6px;
+    border: 1px solid var(--wl-border);
+    height: 36px; /* 设定一个固定高度以保持一致性 */
+}
+
+.trend-chip-info {
+    display: flex;
+    align-items: center; /* 确保图标和名称垂直居中 */
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-normal);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.trend-chip-info .trend-chip-icon svg {
+    width: 16px; /* 调整图标大小 */
+    height: 16px;
+    color: var(--interactive-accent); /* 默认图标颜色 */
+}
+
+.trend-chip-sparkline {
+    flex: 1;
+    display: flex;
+    align-items: flex-end; /* Sparklines 底部对齐 */
+    gap: 4px;
+    height: 24px; /* 维持高度 */
+    padding: 0 4px;
+}
+
+.spark-bar-wrapper {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2px;
+}
+
+.spark-bar {
+    width: 100%;
+    border-radius: 1px;
+    opacity: 0.2;
+}
+
+.spark-bar.is-current {
+    opacity: 1;
+}
+
+.current-dot {
+    width: 3px;
+    height: 3px;
+    background: var(--interactive-accent);
+    border-radius: 50%;
+}
+
+.trend-indicator {
+    font-size: 11px;
+    font-weight: bold;
+    min-width: 35px;
+    text-align: right;
+    display: flex; /* 让指示器内容居中 */
+    align-items: center;
+    justify-content: flex-end;
+    height: 24px; /* 与 sparkline 高度一致 */
+}
+
+.trend-indicator.is-up { color: var(--text-error); }
+.trend-indicator.is-down { color: var(--text-success); }
+.trend-indicator.is-stable { opacity: 0.3; }
+
+/* 删除了 .trend-chip-value 样式 */
+
+/* === Sidebar Refined Header === */
+.wl-suggestion-header {
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--background-secondary);
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.wl-suggestion-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--interactive-accent);
+}
+
+.wl-spark-icon svg {
+    width: 14px;
+    height: 14px;
+}
+
+.wl-refresh-button {
+    cursor: pointer;
+    color: var(--text-muted);
+    display: flex;
+    padding: 2px;
+}
+
+.wl-refresh-button:hover {
+    color: var(--text-normal);
+}
+
+.wl-refresh-button svg {
+    width: 14px;
+    height: 14px;
+}
+
+.wl-refresh-button.is-spinning svg {
+    animation: wl-spin 1s linear infinite;
+}
+
+.wl-suggestion-content {
+    padding: 10px;
+    font-size: 0.85em;
+}
+
+.wl-suggestion-content p:first-child {
+    margin-top: 0;
+}
+    margin: 10px;
+    background: var(--background-secondary-alt);
+    border-radius: 8px;
+    border: 1px solid var(--background-modifier-border);
+    overflow: hidden;
+}
+
+.wl-suggestion-header {
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--background-secondary);
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.trend-bar-slot {
+    flex: 1;
+    height: 100%;
+    background: var(--background-secondary-alt);
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    max-width: 24px;
+}
+
+.trend-axis {
+    display: flex;
+    margin-top: 8px;
+    padding-top: 4px;
+}
+
+.axis-spacer {
+    width: 120px;
+    flex-shrink: 0;
+    margin-right: 16px;
+}
+
+.axis-labels {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+.cat-group-value {
+    width: 45px;
+    text-align: right;
+    font-size: 11px;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.trend-mini-bar {
+    width: 100%;
+    border-radius: 2px 2px 0 0;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.trend-mini-bar.is-current {
+    opacity: 1;
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+}
+
+.trend-mini-bar:hover {
+    opacity: 0.8;
+    transform: scaleY(1.1);
+}
+
+.wl-suggestion-summary::-webkit-details-marker {
+    display: none;
+}
+
+.wl-suggestion-content {
+    padding: 0 12px 12px 12px;
+    font-size: 0.85em;
+    line-height: 1.5;
+    color: var(--text-normal);
+}
+
+.wl-suggestion-content p {
+    margin: 8px 0;
+}
+
+/* === Dashboard Advice Card === */
+.wl-dashboard-advice-card {
+    background: var(--background-secondary-alt);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    border: 1px solid var(--background-modifier-border);
+}
+
+.wl-advice-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    color: var(--interactive-accent);
+}
+
+.wl-advice-icon svg {
+    width: 14px;
+    height: 14px;
+}
+
+.wl-advice-title {
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.wl-advice-content {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-normal);
+    max-height: none !important;
+    overflow-y: hidden !important; /* 强制移除滚动条 */
+}
+
+.trend-chart-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.sparkline-avg-line {
+    position: absolute;
+    width: 100%;
+    border-top: 1px dashed var(--background-modifier-border);
+    left: 0;
+    z-index: 1;
+}
+
+/* === MCP Modal Styles === */
+/* === Global Modal Fixes (Direct Class Control) === */
+
+/* 1. 彻底物理移除遮罩层 */
+.modal-container:has(.wl-mcp-modal) .modal-bg {
+    display: none !important;
+}
+
+/* 2. 看板与智能助理视图的通用外观：单层、轻量、无影 */
+.modal.wl-mcp-modal {
+    background-color: var(--background-primary) !important;
+    border: 1px solid var(--background-modifier-border) !important;
+    box-shadow: var(--shadow-l) !important;
+    border-radius: 12px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    margin: 0 auto !important; /* 水平居中 */
+}
+
+/* 3. 各自的宽度控制 */
+.modal.wl-mcp-modal {
+    max-width: 800px !important; /* 增加最大宽度 */
+    width: 700px !important; /* 增加宽度 */
+    height: auto !important; /* 高度自适应 */
+    max-height: 90vh !important; /* 限制最大高度 */
+}
+
+/* 4. 内容层撑满 */
+.modal-content.wl-mcp-modal {
+    width: 100% !important;
+    height: 100% !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+}
+
+/* === MCP Modal Styles === */
+.wl-mcp-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+}
+
+.mcp-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--background-modifier-border);
+    padding-bottom: 12px;
+}
+
+.mcp-modal-header h3 {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: bold;
+    flex-grow: 1; /* 允许标题占据空间 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mcp-prompt-btn {
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 16px;
+    background: var(--background-secondary);
+    border: 1px solid var(--background-modifier-border);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap; /* 防止按钮内文本换行 */
+}
+
+.mcp-prompt-btn:hover {
+    background: var(--background-modifier-hover);
+    color: var(--text-normal);
+    border-color: var(--interactive-accent);
+}
+
+.mcp-prompt-btn.is-active {
+    background: var(--interactive-accent);
+    color: white;
+    border-color: var(--interactive-accent);
+}
+
+.mcp-input-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 8px;
+    padding: 4px 8px;
+    background: var(--background-primary);
+}
+
+.mcp-custom-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    padding: 8px;
+}
+
+.mcp-custom-input:focus {
+    box-shadow: none;
+    border: none;
+}
+
+.mcp-send-btn {
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.mcp-send-btn:hover {
+    color: var(--interactive-accent);
+}
+
+.mcp-send-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.mcp-result-area {
+    background: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 100px;
+    font-size: 14px;
+    line-height: 1.6;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.mcp-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--text-muted);
+    height: 150px;
+}
+
+.is-spinning svg {
+    animation: wl-spin 1s linear infinite;
+}
+
+/* === Dashboard Layout === */

@@ -172,6 +172,13 @@ export const zh: Record<string, string> = {
     'cat_planning': '计划规划',
     'cat_work': '常规工作',
 
+    // Proactive AI
+    'aiCoachTitle': 'AI 工作教练建议',
+    'aiCoachAnalyzing': '正在回顾过去两周的表现...',
+    'aiCoachPrompt': '你是一个专业的工作教练。请分析用户过去两周的工作统计数据（工时分布、任务类型），给出 3 条具体的改进建议。要求：1. 语气亲和且专业；2. 建议要量化或可操作；3. 使用 Markdown 格式。',
+    'trendTitle': '近期工作趋势',
+    'weekWorkHours': '周工时',
+
     // settings - categories
     'categoryConfigTitle': '分类体系管理',
     'categoryConfigDesc': '自定义任务分类及其识别规则（正则表达式）。启用后，看板和时间线将按此体系进行统计。',
@@ -188,4 +195,12 @@ export const zh: Record<string, string> = {
     'addCategory': '添加分类',
     'restoreDefaults': '恢复默认分类',
     'restoreSuccess': '分类体系已恢复至默认状态',
+
+    // maintenance
+    'maintenanceTitle': '维护',
+    'rebuildIndex': '重建数据索引',
+    'rebuildIndexDesc': '全量扫描日志以刷新趋势数据。',
+    'rebuildNow': '立即重建',
+    'rebuilding': '正在扫描...',
+    'rebuildSuccess': '索引重建成功',
 };
